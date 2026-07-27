@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://<YOUR_RENDER_BACKEND_URL>/api/:path*"
+      "destination": "https://www.mitraclima.co.id/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://<YOUR_RENDER_BACKEND_URL>/uploads/:path*"
+      "destination": "https://www.mitraclima.co.id/uploads/:path*"
     },
     {
       "source": "/(.*)",
