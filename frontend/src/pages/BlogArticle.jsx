@@ -32,6 +32,19 @@ export default function BlogArticle({ blogs = [] }) {
         <title>{blog.title} - Mitra Clima Pro</title>
         <meta name="description" content={blog.excerpt} />
         {blog.tag && <meta name="keywords" content={blog.tag} />}
+        
+        {/* Open Graph / Social Media (WhatsApp, Facebook, LinkedIn) */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={blog.title} />
+        <meta property="og:description" content={blog.excerpt} />
+        <meta property="og:url" content={typeof window !== 'undefined' ? window.location.href : ''} />
+        {blog.img_src && <meta property="og:image" content={typeof window !== 'undefined' ? window.location.origin + blog.img_src : ''} />}
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={blog.title} />
+        <meta name="twitter:description" content={blog.excerpt} />
+        {blog.img_src && <meta name="twitter:image" content={typeof window !== 'undefined' ? window.location.origin + blog.img_src : ''} />}
       </Helmet>
       
       <article style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 24px' }}>

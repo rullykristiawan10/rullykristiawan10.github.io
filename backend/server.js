@@ -250,6 +250,84 @@ app.delete('/api/blogs/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// --- Change Admin Password ---
+app.put('/api/admin/password', authenticateToken, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  try {
+    const result = await pool.query('SELECT * FROM admins WHERE id = $1', [req.user.id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
+    
+    const user = result.rows[0];
+    const isMatch = await bcrypt.compare(currentPassword, user.password_hash);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Password saat ini salah.' });
+    }
+    
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
+    
+    await pool.query('UPDATE admins SET password_hash = $1 WHERE id = $2', [hash, req.user.id]);
+    res.json({ message: 'Password berhasil diperbarui.' });
+  } catch (err) {
+    console.error('Error changing password:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// --- CRUD Messages ---
+app.post('/api/messages', async (req, res) => {
+  const { name, email, phone, message } = req.body;
+  try {
+    const result = await pool.query(
+      `INSERT INTO messages (name, email, phone, message, status) 
+       VALUES ($1, $2, $3, $4, 'unread') RETURNING *`,
+      [name, email, phone, message]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Error adding message:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/messages', authenticateToken, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM messages ORDER BY created_at DESC');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching messages:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.put('/api/messages/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  try {
+    const result = await pool.query(
+      'UPDATE messages SET status=$1 WHERE id=$2 RETURNING *',
+      [status, id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Message not found' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error updating message:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.delete('/api/messages/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('DELETE FROM messages WHERE id=$1 RETURNING *', [id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Message not found' });
+    res.json({ message: 'Message deleted' });
+  } catch (err) {
+    console.error('Error deleting message:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, 'dist')));
 

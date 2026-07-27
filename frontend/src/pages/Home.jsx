@@ -4,6 +4,7 @@ import PanelPowerPage from './PanelPowerPage';
 import PanelKontrolPage from './PanelKontrolPage';
 import ComponentSection from '../components/ComponentSection';
 import BlogSection from '../components/BlogSection';
+import ContactSection from '../components/ContactSection';
 
 export default function Home({ products, components, blogs, search, openModal }) {
   return (
@@ -18,6 +19,7 @@ export default function Home({ products, components, blogs, search, openModal })
       <PanelKontrolPage openModal={openModal} isFeatured={true} />
       <ComponentSection components={components} search={search} openModal={openModal} isFeatured={true} />
       <BlogSection blogs={blogs} isFeatured={true} />
+      <ContactSection />
     </>
   );
 }

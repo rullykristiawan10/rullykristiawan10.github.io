@@ -57,10 +57,15 @@ const renderAggregateStock = (item) => {
 };
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('products');
-  const [data, setData] = useState({ products: [], components: [], blogs: [] });
+  const [activeTab, setActiveTab] = useState('overview');
+  const [data, setData] = useState({ products: [], components: [], blogs: [], messages: [] });
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  
+  // Search & Pagination state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
   
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,6 +74,11 @@ export default function AdminDashboard() {
   const [toastMsg, setToastMsg] = useState('');
   
   const navigate = useNavigate();
+
+  // Reset page when tab or search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, searchQuery]);
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
@@ -99,14 +109,17 @@ export default function AdminDashboard() {
 
   const fetchData = async () => {
     setLoading(true);
+    const token = localStorage.getItem('adminToken');
     try {
       const pRes = await fetch('/api/products');
       const cRes = await fetch('/api/components');
       const bRes = await fetch('/api/blogs');
+      const mRes = await fetch('/api/messages', { headers: { 'Authorization': `Bearer ${token}` } });
       const products = await pRes.json();
       const components = await cRes.json();
       const blogs = bRes.ok ? await bRes.json() : [];
-      setData({ products, components, blogs });
+      const messages = mRes.ok ? await mRes.json() : [];
+      setData({ products, components, blogs, messages });
     } catch (err) {
       showToast('Gagal memuat data');
     } finally {
@@ -126,13 +139,16 @@ export default function AdminDashboard() {
 
   const handleOpenModal = (mode, item = null) => {
     setModalMode(mode);
-    if (mode === 'edit' && item) {
+    if (item) {
       const parsedItem = { ...item };
       if (typeof parsedItem.features === 'string') {
         try { parsedItem.features = JSON.parse(parsedItem.features); } catch(e) { parsedItem.features = []; }
       }
       if (typeof parsedItem.parts === 'string') {
         try { parsedItem.parts = JSON.parse(parsedItem.parts); } catch(e) { parsedItem.parts = []; }
+      }
+      if (mode === 'add') {
+        delete parsedItem.id; // Remove ID for duplication
       }
       setFormData(parsedItem);
     } else {
@@ -336,6 +352,9 @@ export default function AdminDashboard() {
           <span className="admin-badge">Admin Panel</span>
         </div>
         <nav className="admin-nav">
+          <button className={`admin-nav-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>
+            📊 Ringkasan
+          </button>
           <button className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`} onClick={() => setActiveTab('products')}>
             📦 Kelola Panel
           </button>
@@ -344,6 +363,12 @@ export default function AdminDashboard() {
           </button>
           <button className={`admin-nav-item ${activeTab === 'blogs' ? 'active' : ''}`} onClick={() => setActiveTab('blogs')}>
             📝 Kelola Blog
+          </button>
+          <button className={`admin-nav-item ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>
+            ✉️ Pesan Masuk
+          </button>
+          <button className={`admin-nav-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
+            ⚙️ Pengaturan
           </button>
         </nav>
         <div className="admin-user">
@@ -354,116 +379,233 @@ export default function AdminDashboard() {
       
       <main className="admin-main">
         <header className="admin-header">
-          <h2>Kelola {activeTab === 'products' ? 'Katalog Produk' : activeTab === 'components' ? 'Katalog Komponen' : 'Blog'}</h2>
-          <button className="btn-admin-primary" onClick={() => handleOpenModal('add')}>
-            + Tambah {activeTab === 'products' ? 'Produk' : activeTab === 'components' ? 'Komponen' : 'Blog'}
-          </button>
+          <h2>
+            {activeTab === 'overview' ? 'Ringkasan Dashboard' : 
+             activeTab === 'products' ? 'Kelola Katalog Produk' : 
+             activeTab === 'components' ? 'Kelola Katalog Komponen' : 
+             activeTab === 'blogs' ? 'Kelola Blog' : 
+             activeTab === 'messages' ? 'Pesan Masuk' : 
+             'Pengaturan Akun'}
+          </h2>
+          {['products', 'components', 'blogs'].includes(activeTab) && (
+            <button className="btn-admin-primary" onClick={() => handleOpenModal('add')}>
+              + Tambah {activeTab === 'products' ? 'Produk' : activeTab === 'components' ? 'Komponen' : 'Blog'}
+            </button>
+          )}
         </header>
+
+        {/* Search Bar */}
+        {['products', 'components', 'blogs', 'messages'].includes(activeTab) && (
+          <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+            <input 
+              type="text" 
+              placeholder="Cari data..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ padding: '10px 16px', borderRadius: '8px', border: '1px solid var(--border)', width: '300px', fontSize: '14px', outline: 'none' }}
+            />
+          </div>
+        )}
 
         <div className="admin-table-container shadow-premium">
           {loading ? (
             <div style={{padding: '40px', textAlign: 'center'}}>Memuat data...</div>
           ) : (
             <>
-            {activeTab !== 'blogs' && (
-            <table className="admin-table">
-              <thead>
-                {activeTab === 'products' ? (
-                  <tr>
-                    <th>ID</th>
-                    <th>Nama Produk</th>
-                    <th>Kategori</th>
-                    <th>Brand</th>
-                    <th>Harga</th>
-                    <th style={{textAlign: 'center'}}>Stok</th>
-                    <th>Aksi</th>
-                  </tr>
-                ) : (
-                  <tr>
-                    <th>ID</th>
-                    <th>Nama Komponen</th>
-                    <th>Kategori</th>
-                    <th>Supplier</th>
-                    <th>Harga</th>
-                    <th style={{textAlign: 'center'}}>Stok</th>
-                    <th>Aksi</th>
-                  </tr>
-                )}
-              </thead>
-              <tbody>
-                {[...(activeTab === 'products' ? data.products : data.components)]
-                  .sort((a, b) => {
-                    const brandA = (a.brand || a.supplier || '').toLowerCase();
-                    const brandB = (b.brand || b.supplier || '').toLowerCase();
-                    if (brandA < brandB) return -1;
-                    if (brandA > brandB) return 1;
-                    const catA = (a.cat || a.category || '').toLowerCase();
-                    const catB = (b.cat || b.category || '').toLowerCase();
-                    if (catA < catB) return -1;
-                    if (catA > catB) return 1;
-                    return 0;
-                  })
-                  .map(item => (
-                  <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td style={{fontWeight: 600}}>{item.name}</td>
-                    <td>{item.cat || item.category}</td>
-                    <td>{item.brand || item.supplier}</td>
-                    <td className="admin-price">{formatRp(item.price)}</td>
-                    <td style={{textAlign: 'center'}}>{renderAggregateStock(item)}</td>
-                    <td>
-                      <div className="admin-actions">
-                        <button className="btn-edit" onClick={() => handleOpenModal('edit', item)}>Edit</button>
-                        <button className="btn-delete" onClick={() => handleDelete(item.id, activeTab)}>Hapus</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {(activeTab === 'products' ? data.products : data.components).length === 0 && (
-                  <tr>
-                    <td colSpan="6" style={{textAlign: 'center', padding: '30px'}}>Belum ada data.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-            )}
-            
-            {activeTab === 'blogs' && (
-              <div className="table-responsive">
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Gambar</th>
-                      <th>Judul Artikel</th>
-                      <th>Slug (URL)</th>
-                      <th>Tag</th>
-                      <th>Tanggal</th>
-                      <th style={{ textAlign: 'right' }}>Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.blogs.map((b) => (
-                      <tr key={b.id}>
-                        <td>{b.id}</td>
-                        <td><img src={b.img_src} alt={b.title} style={{width:'50px', height:'50px', objectFit:'cover', borderRadius:'4px'}} /></td>
-                        <td style={{ fontWeight: 600 }}>{b.title}</td>
-                        <td><span style={{background:'#f1f5f9', padding:'2px 6px', borderRadius:'4px', fontSize:'12px'}}>{b.slug}</span></td>
-                        <td><span className="badge2">{b.tag}</span></td>
-                        <td>{b.date}</td>
-                        <td style={{ textAlign: 'right' }}>
-                          <button className="btn-edit" onClick={() => handleOpenModal('edit', b)}>Edit</button>
-                          <button className="btn-delete" onClick={() => handleDelete(b.id, 'blogs')}>Hapus</button>
-                        </td>
-                      </tr>
-                    ))}
-                    {data.blogs.length === 0 && (
-                      <tr><td colSpan="7" style={{textAlign:'center', padding:'30px', color:'var(--muted)'}}>Belum ada artikel blog.</td></tr>
-                    )}
-                  </tbody>
-                </table>
+            {activeTab === 'overview' && (
+              <div style={{ padding: '24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
+                <div style={{ padding: '24px', background: '#e0f2fe', borderRadius: '12px', borderLeft: '4px solid #0284c7' }}>
+                  <h3 style={{ margin: 0, color: '#0369a1', fontSize: '14px', textTransform: 'uppercase' }}>Total Produk Panel</h3>
+                  <p style={{ margin: '10px 0 0 0', fontSize: '32px', fontWeight: 800 }}>{data.products.length}</p>
+                </div>
+                <div style={{ padding: '24px', background: '#dcfce7', borderRadius: '12px', borderLeft: '4px solid #16a34a' }}>
+                  <h3 style={{ margin: 0, color: '#15803d', fontSize: '14px', textTransform: 'uppercase' }}>Total Komponen</h3>
+                  <p style={{ margin: '10px 0 0 0', fontSize: '32px', fontWeight: 800 }}>{data.components.length}</p>
+                </div>
+                <div style={{ padding: '24px', background: '#fef3c7', borderRadius: '12px', borderLeft: '4px solid #d97706' }}>
+                  <h3 style={{ margin: 0, color: '#b45309', fontSize: '14px', textTransform: 'uppercase' }}>Total Blog Artikel</h3>
+                  <p style={{ margin: '10px 0 0 0', fontSize: '32px', fontWeight: 800 }}>{data.blogs.length}</p>
+                </div>
+                <div style={{ padding: '24px', background: '#fee2e2', borderRadius: '12px', borderLeft: '4px solid #dc2626' }}>
+                  <h3 style={{ margin: 0, color: '#b91c1c', fontSize: '14px', textTransform: 'uppercase' }}>Pesan Baru</h3>
+                  <p style={{ margin: '10px 0 0 0', fontSize: '32px', fontWeight: 800 }}>{data.messages.filter(m => m.status === 'unread').length}</p>
+                </div>
               </div>
             )}
+
+            {activeTab === 'settings' && (
+              <div style={{ padding: '30px', maxWidth: '500px' }}>
+                <h3 style={{ marginBottom: '20px' }}>Ubah Password Admin</h3>
+                <form onSubmit={async (e) => {
+                  e.preventDefault();
+                  const token = localStorage.getItem('adminToken');
+                  const currentPassword = e.target.currentPassword.value;
+                  const newPassword = e.target.newPassword.value;
+                  const confirmPassword = e.target.confirmPassword.value;
+                  if (newPassword !== confirmPassword) {
+                    showToast('Password baru dan konfirmasi tidak cocok');
+                    return;
+                  }
+                  try {
+                    const res = await fetch('/api/admin/password', {
+                      method: 'PUT',
+                      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                      body: JSON.stringify({ currentPassword, newPassword })
+                    });
+                    const result = await res.json();
+                    if (res.ok) {
+                      showToast('Password berhasil diubah!');
+                      e.target.reset();
+                    } else {
+                      showToast(result.error || 'Gagal mengubah password');
+                    }
+                  } catch (err) {
+                    showToast('Terjadi kesalahan server');
+                  }
+                }}>
+                  <div className="form-group">
+                    <label>Password Saat Ini</label>
+                    <input type="password" name="currentPassword" required style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border)' }} />
+                  </div>
+                  <div className="form-group">
+                    <label>Password Baru</label>
+                    <input type="password" name="newPassword" required minLength="6" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border)' }} />
+                  </div>
+                  <div className="form-group">
+                    <label>Konfirmasi Password Baru</label>
+                    <input type="password" name="confirmPassword" required minLength="6" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border)' }} />
+                  </div>
+                  <button type="submit" className="btn-admin-primary" style={{ marginTop: '10px', width: '100%' }}>Simpan Password Baru</button>
+                </form>
+              </div>
+            )}
+
+            {['products', 'components', 'blogs', 'messages'].includes(activeTab) && (() => {
+              // Filtering
+              let list = activeTab === 'products' ? data.products : 
+                         activeTab === 'components' ? data.components : 
+                         activeTab === 'messages' ? data.messages : data.blogs;
+              
+              if (searchQuery) {
+                const q = searchQuery.toLowerCase();
+                list = list.filter(item => 
+                  (item.name || item.title || item.name || '').toLowerCase().includes(q) || 
+                  (item.cat || item.category || item.tag || '').toLowerCase().includes(q) ||
+                  (item.brand || item.supplier || item.email || '').toLowerCase().includes(q)
+                );
+              }
+
+              // Sorting for products/components
+              if (activeTab === 'products' || activeTab === 'components') {
+                list = list.sort((a, b) => {
+                  const brandA = (a.brand || a.supplier || '').toLowerCase();
+                  const brandB = (b.brand || b.supplier || '').toLowerCase();
+                  if (brandA < brandB) return -1;
+                  if (brandA > brandB) return 1;
+                  const catA = (a.cat || a.category || '').toLowerCase();
+                  const catB = (b.cat || b.category || '').toLowerCase();
+                  if (catA < catB) return -1;
+                  if (catA > catB) return 1;
+                  return 0;
+                });
+              }
+
+              // Pagination
+              const totalPages = Math.ceil(list.length / itemsPerPage) || 1;
+              const paginatedList = list.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+              return (
+                <div className="table-responsive">
+                  <table className="admin-table">
+                    <thead>
+                      {activeTab === 'products' && <tr><th>ID</th><th>Nama Produk</th><th>Kategori</th><th>Brand</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
+                      {activeTab === 'components' && <tr><th>ID</th><th>Nama Komponen</th><th>Kategori</th><th>Supplier</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
+                      {activeTab === 'blogs' && <tr><th>ID</th><th>Gambar</th><th>Judul Artikel</th><th>Slug (URL)</th><th>Tag</th><th>Tanggal</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
+                      {activeTab === 'messages' && <tr><th>Tanggal</th><th>Nama</th><th>Email / WA</th><th>Pesan</th><th>Status</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
+                    </thead>
+                    <tbody>
+                      {paginatedList.map(item => (
+                        <tr key={item.id} style={activeTab === 'messages' && item.status === 'unread' ? { backgroundColor: '#f0f9ff', fontWeight: 600 } : {}}>
+                          {activeTab === 'messages' ? (
+                            <>
+                              <td>{new Date(item.created_at).toLocaleDateString('id-ID')}</td>
+                              <td>{item.name}</td>
+                              <td>{item.email} <br/><span style={{fontSize:'12px', color:'var(--muted)'}}>{item.phone}</span></td>
+                              <td><div style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={item.message}>{item.message}</div></td>
+                              <td>
+                                {item.status === 'unread' ? <span style={{background:'#fee2e2', color:'#dc2626', padding:'4px 8px', borderRadius:'4px', fontSize:'11px'}}>Baru</span> : <span style={{background:'#dcfce7', color:'#16a34a', padding:'4px 8px', borderRadius:'4px', fontSize:'11px'}}>Dibaca</span>}
+                              </td>
+                              <td style={{ textAlign: 'right' }}>
+                                {item.status === 'unread' && (
+                                  <button className="btn-edit" onClick={async () => {
+                                    const res = await fetch(`/api/messages/${item.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }, body: JSON.stringify({ status: 'read' }) });
+                                    if (res.ok) fetchData();
+                                  }}>Tandai Dibaca</button>
+                                )}
+                                <button className="btn-delete" onClick={() => handleDelete(item.id, 'messages')} style={{marginLeft:'8px'}}>Hapus</button>
+                              </td>
+                            </>
+                          ) : activeTab === 'blogs' ? (
+                            <>
+                              <td>{item.id}</td>
+                              <td><img src={item.img_src} alt={item.title} style={{width:'50px', height:'50px', objectFit:'cover', borderRadius:'4px'}} /></td>
+                              <td style={{ fontWeight: 600 }}>{item.title}</td>
+                              <td><span style={{background:'#f1f5f9', padding:'2px 6px', borderRadius:'4px', fontSize:'12px'}}>{item.slug}</span></td>
+                              <td><span className="badge2">{item.tag}</span></td>
+                              <td>{item.date}</td>
+                              <td style={{ textAlign: 'right' }}>
+                                <button className="btn-edit" onClick={() => handleOpenModal('edit', item)}>Edit</button>
+                                <button className="btn-delete" onClick={() => handleDelete(item.id, 'blogs')} style={{marginLeft:'8px'}}>Hapus</button>
+                              </td>
+                            </>
+                          ) : (
+                            <>
+                              <td>{item.id}</td>
+                              <td style={{fontWeight: 600}}>{item.name}</td>
+                              <td>{item.cat || item.category}</td>
+                              <td>{item.brand || item.supplier}</td>
+                              <td className="admin-price">{formatRp(item.price)}</td>
+                              <td style={{textAlign: 'center'}}>{renderAggregateStock(item)}</td>
+                              <td>
+                                <div className="admin-actions">
+                                  <button className="btn-edit" onClick={() => handleOpenModal('edit', item)}>Edit</button>
+                                  <button className="btn-edit" style={{background: '#f59e0b', color: '#fff', borderColor: '#f59e0b'}} onClick={() => handleOpenModal('add', item)}>Duplikat</button>
+                                  <button className="btn-delete" onClick={() => handleDelete(item.id, activeTab)}>Hapus</button>
+                                </div>
+                              </td>
+                            </>
+                          )}
+                        </tr>
+                      ))}
+                      {paginatedList.length === 0 && (
+                        <tr><td colSpan="7" style={{textAlign:'center', padding:'30px', color:'var(--muted)'}}>Data tidak ditemukan.</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+
+                  {/* Pagination Controls */}
+                  {totalPages > 1 && (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px', gap: '10px', borderTop: '1px solid var(--border)' }}>
+                      <button 
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                        disabled={currentPage === 1}
+                        style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: '6px', background: currentPage === 1 ? '#f1f5f9' : '#fff', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', fontWeight: 600 }}
+                      >
+                        Prev
+                      </button>
+                      <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text)' }}>Halaman {currentPage} dari {totalPages}</span>
+                      <button 
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                        disabled={currentPage === totalPages}
+                        style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: '6px', background: currentPage === totalPages ? '#f1f5f9' : '#fff', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', fontWeight: 600 }}
+                      >
+                        Next
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
             </>
           )}
         </div>
