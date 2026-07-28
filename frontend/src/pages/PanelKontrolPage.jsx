@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+const formatRp = (n) => 'Rp ' + n.toLocaleString('id-ID');
 const kontrolProducts = [
   {
     name: 'Panel Kontrol Soft Starter',
