@@ -14,8 +14,41 @@ export const powerProducts = [
   { name: 'Switchgear Panel', desc: 'Switchgear LV/MV untuk proteksi, isolasi, dan pengendalian distribusi daya pada instalasi besar.', price: 35000000, tag: 'Switchgear', voltage: '20kV', phase: '3-Phase', svg: <img src="/images/switchgear_panel.png" alt="Switchgear Panel" style={{ width: '56px', height: '56px', objectFit: 'contain' }} />, images: ['/images/switchgear_panel.png', '/images/panel_angled.png', '/images/panel_front.png', '/images/panel_inside.png', '/images/panel_top.png'] }
 ];
 
-export default function PanelPowerPage({ openModal, isFeatured }) {
-  const items = isFeatured ? powerProducts.slice(0, 4) : powerProducts;
+export default function PanelPowerPage({ openModal, isFeatured, products = [] }) {
+  // Get DB products matching this category
+  const apiPowerProducts = products.filter(p => p.type === 'distribusi' || (p.cat && p.cat.toUpperCase() === 'PANEL DISTRIBUSI'));
+  
+  // Format API products to match component props
+  const formattedApiProducts = apiPowerProducts.map(p => {
+    let parts = [];
+    if (typeof p.parts === 'string') {
+      try { parts = JSON.parse(p.parts); } catch(e) {}
+    } else if (Array.isArray(p.parts)) {
+      parts = p.parts;
+    }
+    
+    return {
+      id: p.id,
+      name: p.name || p.title,
+      desc: p.desc || p.excerpt || p.description,
+      price: p.price,
+      tag: p.tag || 'Power',
+      voltage: p.voltage || '380V',
+      phase: p.phase || '3-Phase',
+      svg: <img src={p.img_src || (p.images && p.images[0]) || "/images/lvmdp_panel.png"} alt={p.name} style={{ width: '56px', height: '56px', objectFit: 'contain' }} />,
+      images: p.images ? (typeof p.images === 'string' ? JSON.parse(p.images) : p.images) : (p.img_src ? [p.img_src] : []),
+      parts: parts,
+      stock: p.stock
+    };
+  });
+
+  // Combine DB products with hardcoded products (DB products first)
+  // To avoid duplicates if DB is seeded with the same names, we filter out hardcoded ones that have the same name as DB ones.
+  const apiProductNames = new Set(formattedApiProducts.map(p => p.name.toLowerCase()));
+  const filteredHardcoded = powerProducts.filter(p => !apiProductNames.has(p.name.toLowerCase()));
+  
+  const allItems = [...formattedApiProducts, ...filteredHardcoded];
+  const items = isFeatured ? allItems.slice(0, 4) : allItems;
 
   return (
     <div style={isFeatured ? {} : { paddingTop: '80px', minHeight: 'calc(100vh - 300px)' }}>
@@ -49,7 +82,7 @@ export default function PanelPowerPage({ openModal, isFeatured }) {
                   <p>{p.desc}</p>
                   <div className="product-price">Mulai <span>{formatRp(p.price)}</span></div>
                   <div className="product-actions">
-                    <button className="btn-primary" onClick={(e) => { e.preventDefault(); openModal({name: p.name, price: p.price, cat: 'PANEL POWER', brand: 'SCHNEIDER', voltage: p.voltage, phase: p.phase, desc: p.desc, images: p.images}); }}>Lihat Detail</button>
+                    <button className="btn-primary" onClick={(e) => { e.preventDefault(); openModal({name: p.name, price: p.price, cat: 'PANEL POWER', brand: 'SCHNEIDER', voltage: p.voltage, phase: p.phase, desc: p.desc, images: p.images, parts: p.parts}); }}>Lihat Detail</button>
                   </div>
                 </article>
               ))}

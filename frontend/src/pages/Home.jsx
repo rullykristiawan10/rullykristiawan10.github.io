@@ -15,8 +15,8 @@ export default function Home({ products, components, blogs, search, openModal })
         <p style={{ color: '#475569', maxWidth: '600px', margin: '0 auto' }}>Jelajahi koleksi panel dan komponen terbaik kami untuk kebutuhan industri Anda.</p>
       </div>
       <ProductGrid products={products} search={search} openModal={openModal} isFeatured={true} />
-      <PanelPowerPage openModal={openModal} isFeatured={true} />
-      <PanelKontrolPage openModal={openModal} isFeatured={true} />
+      <PanelPowerPage openModal={openModal} isFeatured={true} products={products} />
+      <PanelKontrolPage openModal={openModal} isFeatured={true} products={products} />
       <ComponentSection components={components} search={search} openModal={openModal} isFeatured={true} />
       <BlogSection blogs={blogs} isFeatured={true} />
       <ContactSection />

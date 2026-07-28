@@ -9,34 +9,56 @@ export default function ComponentSection({ components, search, openModal, isFeat
   const [sortValue, setSortValue] = useState('default');
 
   const filteredComponents = useMemo(() => {
-    let result = components.filter(item => {
-      if (activeSupplier && item.supplier !== activeSupplier) return false;
-      if (item.supplier === 'SCHNEIDER' && (item.category === 'TERMINAL BLOCKS' || item.category === 'STOPPER TERMINAL BLOCK' || item.tag === 'TERMINAL BLOCKS' || item.tag === 'STOPPER TERMINAL BLOCK')) return false;
-      if (activeTag && activeTag !== 'Semua' && activeTag !== 'all' && item.tag !== activeTag) return false;
-      if (search && ![item.name, item.category, item.description, item.supplier].some(field => field.toLowerCase().includes(search.toLowerCase()))) return false;
-      return true;
+    let result = [];
+    
+    // Extremely robust filtering
+    for (let i = 0; i < components.length; i++) {
+      const item = components[i];
+      if (!item) continue;
+      
+      // 1. Supplier filter
+      if (activeSupplier === 'Semua Supplier' || !activeSupplier) {
+        // Keep all suppliers
+      } else if (item.supplier !== activeSupplier) {
+        continue;
+      }
+      
+      // 2. Tag filter
+      if (activeTag && activeTag !== 'Semua' && activeTag !== 'all') {
+        if (item.tag !== activeTag) {
+          continue;
+        }
+      }
+      
+      // 3. Search filter
+      if (search && typeof search === 'string' && search.trim() !== '') {
+        const query = search.toLowerCase().trim();
+        const n = (item.name || '').toLowerCase();
+        const c = (item.category || '').toLowerCase();
+        const d = (item.description || '').toLowerCase();
+        const s = (item.supplier || '').toLowerCase();
+        if (!n.includes(query) && !c.includes(query) && !d.includes(query) && !s.includes(query)) {
+          continue;
+        }
+      }
+      
+      // Add to result
+      result.push(item);
+    }
+    
+    // Simple sort
+    const tagsOrder = ['Semua', 'MCB', 'MCCB', 'KONTAKTOR', 'RELAY', 'PFR RELAY', 'HMI', 'POWER SUPPLY', 'PUSH BUTTON', 'HANDLE SELECT SWITCH', 'EMERGENCY STOP', 'PILOT LIGHT', 'BUZZER', 'TERMINAL BLOCKS', 'STOPPER TERMINAL BLOCK', 'THERMAL OVERLOAD RELAY'];
+    
+    result.sort((a, b) => {
+      let indexA = tagsOrder.indexOf(a.category || '');
+      let indexB = tagsOrder.indexOf(b.category || '');
+      if (indexA === -1) indexA = 999;
+      if (indexB === -1) indexB = 999;
+      return indexA - indexB;
     });
 
-    if (sortValue === 'price-asc') {
-      result.sort((a, b) => a.price - b.price);
-    } else if (sortValue === 'price-desc') {
-      result.sort((a, b) => b.price - a.price);
-    } else if (sortValue === 'supplier') {
-      result.sort((a, b) => a.supplier.localeCompare(b.supplier));
-    } else {
-      // Default sort by category order defined in tags array
-      const tagsOrder = ['Semua', 'MCB', 'MCCB', 'KONTAKTOR', 'RELAY', 'PFR RELAY', 'HMI', 'POWER SUPPLY', 'PUSH BUTTON', 'HANDLE SELECT SWITCH', 'EMERGENCY STOP', 'PILOT LIGHT', 'BUZZER', 'TERMINAL BLOCKS', 'STOPPER TERMINAL BLOCK', 'THERMAL OVERLOAD RELAY'];
-      result.sort((a, b) => {
-        let indexA = tagsOrder.indexOf(a.category);
-        let indexB = tagsOrder.indexOf(b.category);
-        if (indexA === -1) indexA = 999;
-        if (indexB === -1) indexB = 999;
-        return indexA - indexB;
-      });
-    }
-
     return result;
-  }, [components, activeSupplier, activeTag, search, sortValue]);
+  }, [components, activeSupplier, activeTag, search]);
 
   const featuredComponents = useMemo(() => {
     if (!isFeatured) return [];

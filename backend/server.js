@@ -7,6 +7,29 @@ const path = require('path');
 const pool = require('./db');
 const { authenticateToken, JWT_SECRET } = require('./middleware/auth');
 
+// Auto-migrate tables
+const initDB = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS messages (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(50),
+        message TEXT NOT NULL,
+        status VARCHAR(20) DEFAULT 'unread',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    await pool.query("ALTER TABLE components ADD COLUMN IF NOT EXISTS stock VARCHAR(50) DEFAULT 'ready'");
+    await pool.query("ALTER TABLE products ADD COLUMN IF NOT EXISTS stock VARCHAR(50) DEFAULT 'ready'");
+    console.log('Database tables verified.');
+  } catch (err) {
+    console.error('Error initializing DB:', err);
+  }
+};
+initDB();
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 

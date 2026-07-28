@@ -857,7 +857,18 @@ export default function AdminDashboard() {
                             <tr key={index} style={{ borderBottom: '1px solid var(--border)' }}>
                               <td style={{ padding: '8px 10px', color: 'var(--muted)', textAlign: 'center', fontWeight: 600 }}>{index + 1}</td>
                               <td style={{ padding: '8px 10px' }}>
-                                <input type="text" value={part.name || ''} onChange={(e) => handlePartChange(index, 'name', e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '13px', boxSizing: 'border-box' }} placeholder="Nama komponen" />
+                                <input list="component-datalist" type="text" value={part.name || ''} onChange={(e) => {
+                                  const val = e.target.value;
+                                  handlePartChange(index, 'name', val);
+                                  const selectedComp = data.components.find(c => c.name === val);
+                                  if (selectedComp) {
+                                    handlePartChange(index, 'price', selectedComp.price || 0);
+                                    if (selectedComp.stock) handlePartChange(index, 'stock', selectedComp.stock);
+                                  }
+                                }} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '13px', boxSizing: 'border-box' }} placeholder="Nama komponen" />
+                                <datalist id="component-datalist">
+                                  {data.components.map(c => <option key={c.id} value={c.name}>{c.brand ? `[${c.brand}] ` : ''}{c.name}</option>)}
+                                </datalist>
                               </td>
                               <td style={{ padding: '8px 10px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>

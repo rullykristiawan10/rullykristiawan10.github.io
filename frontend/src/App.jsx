@@ -265,8 +265,8 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Home products={products} components={components} blogs={blogs} search={search} openModal={openModal} />} />
         <Route path="/custom-panel" element={<CustomPanelPage products={products} search={search} openModal={openModal} />} />
-        <Route path="/panel-power" element={<PanelPowerPage openModal={openModal} />} />
-        <Route path="/panel-kontrol" element={<PanelKontrolPage openModal={openModal} />} />
+        <Route path="/panel-power" element={<PanelPowerPage openModal={openModal} products={products} components={components} />} />
+        <Route path="/panel-kontrol" element={<PanelKontrolPage openModal={openModal} products={products} components={components} />} />
         <Route path="/komponen" element={<KomponenPage components={components} search={search} openModal={openModal} />} />
         <Route path="/blog" element={<BlogPage blogs={blogs} />} />
         <Route path="/blog/:slug" element={<BlogArticle blogs={blogs} />} />
@@ -338,6 +338,20 @@ function AppContent() {
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <div className="modal-price" style={{ margin: 0 }}>{formatRp(displayPrice)}</div>
                   </div>
+                  {!(modalData?.supplier && modalParts && modalParts.length > 0) && modalData.stock !== undefined && modalData.stock !== null && (
+                    <div style={{
+                      padding: '6px 12px', 
+                      borderRadius: '20px', 
+                      fontSize: '13px', 
+                      fontWeight: 700, 
+                      backgroundColor: (modalData.stock === 'kosong' || modalData.stock === '0' || modalData.stock === 0) ? '#fee2e2' : '#dcfce7',
+                      color: (modalData.stock === 'kosong' || modalData.stock === '0' || modalData.stock === 0) ? '#ef4444' : '#10b981'
+                    }}>
+                      {(modalData.stock === 'kosong' || modalData.stock === '0' || modalData.stock === 0) ? 'Stok Habis' : 
+                       (!isNaN(Number(modalData.stock)) && String(modalData.stock).trim() !== '') ? `Stok: ${modalData.stock}` : 
+                       'Stok Tersedia'}
+                    </div>
+                  )}
                 </div>
                 <div className="modal-specs-grid">
                   {renderModalSpecs(modalData)}
