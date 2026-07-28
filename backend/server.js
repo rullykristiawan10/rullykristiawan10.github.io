@@ -6,6 +6,10 @@ const multer = require('multer');
 const path = require('path');
 const pool = require('./db');
 const { authenticateToken, JWT_SECRET } = require('./middleware/auth');
+const whatsapp = require('./whatsapp');
+
+// Initialize WhatsApp Bot
+whatsapp.connectToWhatsApp();
 
 // Auto-migrate tables
 const initDB = async () => {
@@ -22,6 +26,8 @@ const initDB = async () => {
       )
     `);
     await pool.query("ALTER TABLE components ADD COLUMN IF NOT EXISTS stock VARCHAR(50) DEFAULT 'ready'");
+    await pool.query("ALTER TABLE components ADD COLUMN IF NOT EXISTS parts TEXT");
+    await pool.query("ALTER TABLE components ADD COLUMN IF NOT EXISTS images TEXT");
     await pool.query("ALTER TABLE products ADD COLUMN IF NOT EXISTS stock VARCHAR(50) DEFAULT 'ready'");
     console.log('Database tables verified.');
   } catch (err) {
@@ -306,6 +312,11 @@ app.post('/api/messages', async (req, res) => {
        VALUES ($1, $2, $3, $4, 'unread') RETURNING *`,
       [name, email, phone, message]
     );
+
+    // Notify Admin via WhatsApp Bot
+    const waMessage = `*Pesan Baru dari Website!*\n\n*Nama:* ${name}\n*Email:* ${email}\n*Telepon:* ${phone}\n*Pesan:*\n${message}`;
+    whatsapp.sendMessageToAdmin(waMessage);
+
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error('Error adding message:', err);
@@ -349,6 +360,16 @@ app.delete('/api/messages/:id', authenticateToken, async (req, res) => {
     console.error('Error deleting message:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+});
+
+// --- WhatsApp API Endpoints ---
+app.get('/api/whatsapp/status', authenticateToken, (req, res) => {
+  res.json(whatsapp.getStatus());
+});
+
+app.post('/api/whatsapp/logout', authenticateToken, (req, res) => {
+  whatsapp.logoutWhatsApp();
+  res.json({ message: 'Logged out from WhatsApp' });
 });
 
 // Serve frontend static files

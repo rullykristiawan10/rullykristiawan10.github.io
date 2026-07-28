@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AdminWhatsApp from './AdminWhatsApp';
 
 const formatRp = (n) => 'Rp ' + Number(n).toLocaleString('id-ID');
 
@@ -367,6 +368,9 @@ export default function AdminDashboard() {
           <button className={`admin-nav-item ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>
             ✉️ Pesan Masuk
           </button>
+          <button className={`admin-nav-item ${activeTab === 'whatsapp' ? 'active' : ''}`} onClick={() => setActiveTab('whatsapp')}>
+            🤖 WhatsApp Bot
+          </button>
           <button className={`admin-nav-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
             ⚙️ Pengaturan
           </button>
@@ -385,6 +389,7 @@ export default function AdminDashboard() {
              activeTab === 'components' ? 'Kelola Katalog Komponen' : 
              activeTab === 'blogs' ? 'Kelola Blog' : 
              activeTab === 'messages' ? 'Pesan Masuk' : 
+             activeTab === 'whatsapp' ? 'WhatsApp Bot' :
              'Pengaturan Akun'}
           </h2>
           {['products', 'components', 'blogs'].includes(activeTab) && (
@@ -478,6 +483,10 @@ export default function AdminDashboard() {
                   <button type="submit" className="btn-admin-primary" style={{ marginTop: '10px', width: '100%' }}>Simpan Password Baru</button>
                 </form>
               </div>
+            )}
+            
+            {activeTab === 'whatsapp' && (
+              <AdminWhatsApp />
             )}
 
             {['products', 'components', 'blogs', 'messages'].includes(activeTab) && (() => {

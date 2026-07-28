@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const formatRp = (n) => 'Rp ' + n.toLocaleString('id-ID');
+const formatRp = (n) => 'Rp ' + (Number(n) || 0).toLocaleString('id-ID');
 const kontrolProducts = [
   {
     name: 'Panel Kontrol Soft Starter',
@@ -58,7 +58,7 @@ export default function PanelKontrolPage({ openModal, isFeatured, products = [] 
       price: p.price,
       tag: p.tag || 'Kontrol',
       brand: p.brand || 'GENERAL',
-      svg: <img src={p.img_src || (p.images && (typeof p.images === 'string' ? JSON.parse(p.images)[0] : p.images[0])) || "/images/motor_control_panel.png"} alt={p.name || p.title} style={{ width: '56px', height: '56px', objectFit: 'contain' }} />,
+      svg: <img src={p.img_src || (p.images && (typeof p.images === 'string' ? JSON.parse(p.images)[0] : p.images[0])) || "/images/motor_front.png"} alt={p.name || p.title} style={{ width: '56px', height: '56px', objectFit: 'contain' }} />,
       images: p.images ? (typeof p.images === 'string' ? JSON.parse(p.images) : p.images) : (p.img_src ? [p.img_src] : []),
       parts: parts,
       stock: p.stock

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-const formatRp = (n) => 'Rp ' + n.toLocaleString('id-ID');
+const formatRp = (n) => 'Rp ' + (Number(n) || 0).toLocaleString('id-ID');
 
 function getPanelSVG() {
   return (
@@ -217,7 +217,14 @@ export default function ProductGrid({ products, search, openModal, isFeatured })
                   <div className="card-img">{getPanelSVG()}</div>
                   <div className="card-body">
                     <div className="card-cat">
-                      <span className="cat-label">{p.cat}</span>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <span className="cat-label">{p.cat}</span>
+                        {p.stock === 'kosong' || p.stock === 0 ? (
+                          <span style={{ fontSize: '10px', padding: '2px 6px', background: '#fee2e2', color: '#b91c1c', borderRadius: '4px', fontWeight: 600 }}>Pre-Order</span>
+                        ) : (
+                          <span style={{ fontSize: '10px', padding: '2px 6px', background: '#dcfce7', color: '#15803d', borderRadius: '4px', fontWeight: 600 }}>Ready</span>
+                        )}
+                      </div>
                       <span className={`brand-badge ${p.brand === 'SCHNEIDER' || p.brand === 'SIEMENS' ? 'schneider' : ''}`}>{p.brand}</span>
                     </div>
                     <div className="card-name">{p.name}</div>

@@ -1,6 +1,6 @@
 
 
-const formatRp = (n) => 'Rp ' + n.toLocaleString('id-ID');
+const formatRp = (n) => 'Rp ' + (Number(n) || 0).toLocaleString('id-ID');
 
 export default function CartModal({ isOpen, onClose, cartItems, onRemove }) {
   if (!isOpen) return null;

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
-const formatRp = (n) => 'Rp ' + n.toLocaleString('id-ID');
+const formatRp = (n) => 'Rp ' + (Number(n) || 0).toLocaleString('id-ID');
 
 export const powerProducts = [
   { name: 'LVMDP Panel', desc: 'Low Voltage Main Distribution Panel untuk gedung komersial dan industri skala besar dengan kapasitas tinggi.', price: 25000000, tag: 'LVMDP', voltage: '380V', phase: '3-Phase', svg: <img src="/images/lvmdp_panel.png" alt="LVMDP Panel" style={{ width: '56px', height: '56px', objectFit: 'contain' }} />, images: ['/images/lvmdp_panel.png', '/images/panel_front.png', '/images/panel_inside.png', '/images/panel_side.png', '/images/panel_top.png'] },

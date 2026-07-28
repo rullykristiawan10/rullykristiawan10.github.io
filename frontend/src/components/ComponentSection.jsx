@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-const formatRp = (n) => 'Rp ' + n.toLocaleString('id-ID');
+const formatRp = (n) => 'Rp ' + (Number(n) || 0).toLocaleString('id-ID');
 
 export default function ComponentSection({ components, search, openModal, isFeatured }) {
   const [activeSupplier, setActiveSupplier] = useState('CHINT');
@@ -231,7 +231,14 @@ export default function ComponentSection({ components, search, openModal, isFeat
                     )}
                   </div>
                   <div className="product-cat" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <div className="product-tag" style={{ margin: 0 }}>{item.category}</div>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <div className="product-tag" style={{ margin: 0 }}>{item.category}</div>
+                      {item.stock === 'kosong' || item.stock === 0 ? (
+                        <span style={{ fontSize: '10px', padding: '2px 6px', background: '#fee2e2', color: '#b91c1c', borderRadius: '4px', fontWeight: 600 }}>Pre-Order</span>
+                      ) : (
+                        <span style={{ fontSize: '10px', padding: '2px 6px', background: '#dcfce7', color: '#15803d', borderRadius: '4px', fontWeight: 600 }}>Ready</span>
+                      )}
+                    </div>
                     <span className={`brand-badge ${item.supplier === 'SCHNEIDER' ? 'schneider' : ''}`}>{item.supplier}</span>
                   </div>
                   <h3>{item.name}</h3>

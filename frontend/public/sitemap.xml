@@ -1,50 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Beranda -->
   <url>
-    <loc>https://www.mitraclimapro.co.id/</loc>
-    <lastmod>2026-06-03</lastmod>
+    <loc>https://www.mitraclima.co.id/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  
-  <!-- Halaman Motor Control Panel -->
   <url>
-    <loc>https://www.mitraclimapro.co.id/custom-panel</loc>
-    <lastmod>2026-06-03</lastmod>
+    <loc>https://www.mitraclima.co.id/custom-panel</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  
-  <!-- Halaman Panel Power -->
   <url>
-    <loc>https://www.mitraclimapro.co.id/panel-power</loc>
-    <lastmod>2026-06-03</lastmod>
+    <loc>https://www.mitraclima.co.id/panel-power</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  
-  <!-- Halaman Panel Kontrol -->
   <url>
-    <loc>https://www.mitraclimapro.co.id/panel-kontrol</loc>
-    <lastmod>2026-06-03</lastmod>
+    <loc>https://www.mitraclima.co.id/panel-kontrol</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  
-  <!-- Halaman Komponen -->
   <url>
-    <loc>https://www.mitraclimapro.co.id/komponen</loc>
-    <lastmod>2026-06-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Halaman Blog -->
-  <url>
-    <loc>https://www.mitraclimapro.co.id/blog</loc>
-    <lastmod>2026-06-03</lastmod>
+    <loc>https://www.mitraclima.co.id/komponen</loc>
     <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.mitraclima.co.id/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.mitraclima.co.id/layanan</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 </urlset>
