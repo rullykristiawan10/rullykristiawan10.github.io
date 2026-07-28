@@ -59,7 +59,7 @@ const renderAggregateStock = (item) => {
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
-  const [data, setData] = useState({ products: [], components: [], blogs: [], messages: [] });
+  const [data, setData] = useState({ products: [], components: [], blogs: [], messages: [], portfolios: [] });
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   
@@ -115,12 +115,14 @@ export default function AdminDashboard() {
       const pRes = await fetch('/api/products');
       const cRes = await fetch('/api/components');
       const bRes = await fetch('/api/blogs');
+      const poRes = await fetch('/api/portfolios');
       const mRes = await fetch('/api/messages', { headers: { 'Authorization': `Bearer ${token}` } });
       const products = await pRes.json();
       const components = await cRes.json();
       const blogs = bRes.ok ? await bRes.json() : [];
+      const portfolios = poRes.ok ? await poRes.json() : [];
       const messages = mRes.ok ? await mRes.json() : [];
-      setData({ products, components, blogs, messages });
+      setData({ products, components, blogs, portfolios, messages });
     } catch (err) {
       showToast('Gagal memuat data');
     } finally {
@@ -365,6 +367,9 @@ export default function AdminDashboard() {
           <button className={`admin-nav-item ${activeTab === 'blogs' ? 'active' : ''}`} onClick={() => setActiveTab('blogs')}>
             📝 Kelola Blog
           </button>
+          <button className={`admin-nav-item ${activeTab === 'portfolios' ? 'active' : ''}`} onClick={() => setActiveTab('portfolios')}>
+            🏆 Kelola Portofolio
+          </button>
           <button className={`admin-nav-item ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>
             ✉️ Pesan Masuk
           </button>
@@ -388,19 +393,20 @@ export default function AdminDashboard() {
              activeTab === 'products' ? 'Kelola Katalog Produk' : 
              activeTab === 'components' ? 'Kelola Katalog Komponen' : 
              activeTab === 'blogs' ? 'Kelola Blog' : 
+             activeTab === 'portfolios' ? 'Kelola Portofolio' : 
              activeTab === 'messages' ? 'Pesan Masuk' : 
              activeTab === 'whatsapp' ? 'WhatsApp Bot' :
              'Pengaturan Akun'}
           </h2>
-          {['products', 'components', 'blogs'].includes(activeTab) && (
+          {['products', 'components', 'blogs', 'portfolios'].includes(activeTab) && (
             <button className="btn-admin-primary" onClick={() => handleOpenModal('add')}>
-              + Tambah {activeTab === 'products' ? 'Produk' : activeTab === 'components' ? 'Komponen' : 'Blog'}
+              + Tambah {activeTab === 'products' ? 'Produk' : activeTab === 'components' ? 'Komponen' : activeTab === 'blogs' ? 'Blog' : 'Portofolio'}
             </button>
           )}
         </header>
 
         {/* Search Bar */}
-        {['products', 'components', 'blogs', 'messages'].includes(activeTab) && (
+        {['products', 'components', 'blogs', 'portfolios', 'messages'].includes(activeTab) && (
           <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'flex-end' }}>
             <input 
               type="text" 
@@ -430,6 +436,10 @@ export default function AdminDashboard() {
                 <div style={{ padding: '24px', background: '#fef3c7', borderRadius: '12px', borderLeft: '4px solid #d97706' }}>
                   <h3 style={{ margin: 0, color: '#b45309', fontSize: '14px', textTransform: 'uppercase' }}>Total Blog Artikel</h3>
                   <p style={{ margin: '10px 0 0 0', fontSize: '32px', fontWeight: 800 }}>{data.blogs.length}</p>
+                </div>
+                <div className="padding-box" style={{ padding: '24px', background: '#fef3c7', borderRadius: '12px', borderLeft: '4px solid #d97706' }}>
+                  <h3 style={{ margin: 0, color: '#b45309', fontSize: '14px', textTransform: 'uppercase' }}>Total Portofolio</h3>
+                  <p style={{ margin: '10px 0 0 0', fontSize: '32px', fontWeight: 800 }}>{data.portfolios.length}</p>
                 </div>
                 <div style={{ padding: '24px', background: '#fee2e2', borderRadius: '12px', borderLeft: '4px solid #dc2626' }}>
                   <h3 style={{ margin: 0, color: '#b91c1c', fontSize: '14px', textTransform: 'uppercase' }}>Pesan Baru</h3>
@@ -493,6 +503,7 @@ export default function AdminDashboard() {
               // Filtering
               let list = activeTab === 'products' ? data.products : 
                          activeTab === 'components' ? data.components : 
+                         activeTab === 'portfolios' ? data.portfolios :
                          activeTab === 'messages' ? data.messages : data.blogs;
               
               if (searchQuery) {
@@ -530,6 +541,7 @@ export default function AdminDashboard() {
                       {activeTab === 'products' && <tr><th>ID</th><th>Nama Produk</th><th>Kategori</th><th>Brand</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
                       {activeTab === 'components' && <tr><th>ID</th><th>Nama Komponen</th><th>Kategori</th><th>Supplier</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
                       {activeTab === 'blogs' && <tr><th>ID</th><th>Gambar</th><th>Judul Artikel</th><th>Slug (URL)</th><th>Tag</th><th>Tanggal</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
+                      {activeTab === 'portfolios' && <tr><th>ID</th><th>Gambar</th><th>Judul Proyek</th><th>Klien</th><th>Tahun</th><th>Tag</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
                       {activeTab === 'messages' && <tr><th>Tanggal</th><th>Nama</th><th>Email / WA</th><th>Pesan</th><th>Status</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
                     </thead>
                     <tbody>
@@ -565,6 +577,19 @@ export default function AdminDashboard() {
                               <td style={{ textAlign: 'right' }}>
                                 <button className="btn-edit" onClick={() => handleOpenModal('edit', item)}>Edit</button>
                                 <button className="btn-delete" onClick={() => handleDelete(item.id, 'blogs')} style={{marginLeft:'8px'}}>Hapus</button>
+                              </td>
+                            </>
+                          ) : activeTab === 'portfolios' ? (
+                            <>
+                              <td>{item.id}</td>
+                              <td><img src={item.img_src} alt={item.title} style={{width:'50px', height:'50px', objectFit:'cover', borderRadius:'4px'}} /></td>
+                              <td style={{ fontWeight: 600 }}>{item.title}</td>
+                              <td>{item.client}</td>
+                              <td>{item.year}</td>
+                              <td><span className="badge2">{item.tag}</span></td>
+                              <td style={{ textAlign: 'right' }}>
+                                <button className="btn-edit" onClick={() => handleOpenModal('edit', item)}>Edit</button>
+                                <button className="btn-delete" onClick={() => handleDelete(item.id, 'portfolios')} style={{marginLeft:'8px'}}>Hapus</button>
                               </td>
                             </>
                           ) : (
@@ -623,16 +648,16 @@ export default function AdminDashboard() {
       {/* Modal Form */}
       {isModalOpen && (
         <div className="modal-overlay show" style={{backgroundColor: 'rgba(0,0,0,0.6)'}}>
-          <div className="modal show animate-pop-in admin-modal shadow-premium" style={{ maxWidth: activeTab === 'blogs' ? '1350px' : '1200px' }}>
+          <div className="modal show animate-pop-in admin-modal shadow-premium" style={{ maxWidth: (activeTab === 'blogs' || activeTab === 'portfolios') ? '1350px' : '1200px' }}>
             <div className="modal-header">
-              <h2>{modalMode === 'add' ? 'Tambah' : 'Edit'} {activeTab === 'products' ? 'Produk' : activeTab === 'components' ? 'Komponen' : 'Blog'}</h2>
+              <h2>{modalMode === 'add' ? 'Tambah' : 'Edit'} {activeTab === 'products' ? 'Produk' : activeTab === 'components' ? 'Komponen' : activeTab === 'blogs' ? 'Blog' : 'Portofolio'}</h2>
               <button className="modal-close" onClick={() => setIsModalOpen(false)}>✕</button>
             </div>
             <div className="modal-body" style={{ display: 'block' }}>
-              <form id="adminForm" onSubmit={handleSubmit} className={`admin-form ${activeTab !== 'blogs' ? 'admin-form-grid' : ''}`} style={activeTab === 'blogs' ? { display: 'grid', gridTemplateColumns: '1fr 380px', gap: '40px', alignItems: 'start', width: '100%' } : {}}>
+              <form id="adminForm" onSubmit={handleSubmit} className={`admin-form ${(activeTab !== 'blogs' && activeTab !== 'portfolios') ? 'admin-form-grid' : ''}`} style={(activeTab === 'blogs' || activeTab === 'portfolios') ? { display: 'grid', gridTemplateColumns: '1fr 380px', gap: '40px', alignItems: 'start', width: '100%' } : {}}>
                 
                 {/* LEFT COLUMN: Details */}
-                <div className={activeTab !== 'blogs' ? 'form-left-col' : ''} style={activeTab === 'blogs' ? { width: '100%' } : {}}>
+                <div className={(activeTab !== 'blogs' && activeTab !== 'portfolios') ? 'form-left-col' : ''} style={(activeTab === 'blogs' || activeTab === 'portfolios') ? { width: '100%' } : {}}>
                   {activeTab === 'products' ? (
                     <>
                       <div className="form-group">
@@ -761,6 +786,51 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                     </>
+                  ) : activeTab === 'portfolios' ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                      <div className="form-group" style={{ margin: 0 }}>
+                        <label>Judul Proyek *</label>
+                        <input type="text" name="title" value={formData.title || ''} onChange={handleChange} placeholder="Contoh: Main Distribution Panel (LVMDP) 2500A..." style={{ padding: '12px 16px', fontSize: '15px', fontWeight: 600 }} required />
+                      </div>
+                      
+                      <div className="form-row" style={{ gap: '24px' }}>
+                        <div className="form-group" style={{ flex: 1, margin: 0 }}>
+                          <label>Klien</label>
+                          <input type="text" name="client" value={formData.client || ''} onChange={handleChange} placeholder="Nama Perusahaan/Klien" />
+                        </div>
+                        <div className="form-group" style={{ flex: 1, margin: 0 }}>
+                          <label>Tahun</label>
+                          <input type="text" name="year" value={formData.year || ''} onChange={handleChange} placeholder="2023" />
+                        </div>
+                        <div className="form-group" style={{ flex: 1, margin: 0 }}>
+                          <label>Tag / Kategori</label>
+                          <input type="text" name="tag" value={formData.tag || ''} onChange={handleChange} placeholder="Panel Power, dll" />
+                        </div>
+                      </div>
+
+                      <div className="form-group" style={{ margin: 0, padding: '20px', background: '#f8fafc', border: '1px dashed var(--border)', borderRadius: '12px' }}>
+                        <label style={{ marginBottom: '16px' }}>Gambar Portofolio *</label>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                          {formData.img_src && (
+                            <img src={formData.img_src} alt="Preview" style={{ width: '100px', height: '100px', borderRadius: '12px', objectFit: 'cover', border: '2px solid #fff', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }} />
+                          )}
+                          <div style={{ flex: 1 }}>
+                            <label className="btn-edit" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', padding: '10px 18px', borderRadius: '8px', background: '#e0f2fe', color: '#0ea5e9', fontWeight: 600 }}>
+                              <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'img_src')} style={{ display: 'none' }} />
+                              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                              Pilih Gambar Baru
+                            </label>
+                            <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '8px' }}>Format disarankan: JPG, PNG, WEBP. Maksimal ukuran file 2MB.</p>
+                          </div>
+                        </div>
+                        <input type="hidden" name="img_src" value={formData.img_src || ''} required />
+                      </div>
+
+                      <div className="form-group" style={{ margin: 0 }}>
+                        <label>Deskripsi Proyek</label>
+                        <textarea name="description" value={formData.description || ''} onChange={handleChange} rows="5" placeholder="Tuliskan deskripsi lengkap mengenai hasil kerja/proyek ini..." required style={{ fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: '#fafafa', border: '1px solid var(--border)' }}></textarea>
+                      </div>
+                    </div>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                       <div className="form-row" style={{ gap: '24px' }}>
@@ -842,7 +912,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* RIGHT COLUMN */}
-                {activeTab !== 'blogs' ? (
+                {(activeTab !== 'blogs' && activeTab !== 'portfolios') ? (
                 <div className="form-right-col">
                   <div className="form-group" style={{ margin: 0 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
@@ -933,7 +1003,9 @@ export default function AdminDashboard() {
                 <div className="form-right-col" style={{ position: 'sticky', top: '20px' }}>
                   <div className="form-group" style={{ margin: 0 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                      <label style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Pratinjau Kartu Artikel</label>
+                      <label style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        {activeTab === 'portfolios' ? 'Pratinjau Kartu Portofolio' : 'Pratinjau Kartu Artikel'}
+                      </label>
                       <span style={{ fontSize: '11px', background: '#e0f2fe', color: '#0284c7', padding: '4px 8px', borderRadius: '20px', fontWeight: 600 }}>Live Preview</span>
                     </div>
                     
@@ -949,31 +1021,52 @@ export default function AdminDashboard() {
                         )}
                       </div>
                       <div style={{ padding: '20px' }}>
-                        <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '10px', display: 'flex', gap: '12px', alignItems: 'center' }}>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                            {formData.author || 'Penulis'}
-                          </span>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            {formData.date || 'Tanggal'}
-                          </span>
-                        </div>
-                        <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text)', marginBottom: '10px', lineHeight: 1.4 }}>{formData.title || 'Judul Artikel Akan Tampil Di Sini'}</h3>
-                        <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '0', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{formData.excerpt || 'Ringkasan artikel akan muncul di bagian ini untuk memberikan gambaran singkat kepada pembaca saat melihat daftar blog.'}</p>
+                        {activeTab === 'portfolios' ? (
+                          <>
+                            <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '10px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                                Klien: {formData.client || '-'}
+                              </span>
+                              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                {formData.year || 'Tahun'}
+                              </span>
+                            </div>
+                            <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text)', marginBottom: '10px', lineHeight: 1.4 }}>{formData.title || 'Judul Proyek Akan Tampil Di Sini'}</h3>
+                            <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '0', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{formData.description || 'Deskripsi singkat mengenai proyek yang akan muncul di portofolio.'}</p>
+                          </>
+                        ) : (
+                          <>
+                            <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '10px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                {formData.author || 'Penulis'}
+                              </span>
+                              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                {formData.date || 'Tanggal'}
+                              </span>
+                            </div>
+                            <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text)', marginBottom: '10px', lineHeight: 1.4 }}>{formData.title || 'Judul Artikel Akan Tampil Di Sini'}</h3>
+                            <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '0', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{formData.excerpt || 'Ringkasan artikel akan muncul di bagian ini untuk memberikan gambaran singkat kepada pembaca saat melihat daftar blog.'}</p>
+                          </>
+                        )}
                       </div>
                     </div>
                     
                     <div style={{ marginTop: '24px', padding: '16px', background: '#f8fafc', borderRadius: '12px', border: '1px solid var(--border)' }}>
                       <h4 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Info Status</h4>
                       <div style={{ fontSize: '13px', color: 'var(--muted)' }}>
-                        <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                          <strong>URL:</strong>
-                          <span style={{ color: 'var(--primary)', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>/blog/{formData.slug || 'slug-artikel'}</span>
-                        </div>
+                        {activeTab === 'blogs' && (
+                          <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                            <strong>URL:</strong>
+                            <span style={{ color: 'var(--primary)', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>/blog/{formData.slug || 'slug-artikel'}</span>
+                          </div>
+                        )}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <strong>Kesiapan:</strong>
-                          {formData.title && formData.slug && formData.excerpt && formData.content && formData.img_src ? (
+                          {(activeTab === 'blogs' ? (formData.title && formData.slug && formData.excerpt && formData.content && formData.img_src) : (formData.title && formData.img_src && formData.description)) ? (
                             <span style={{ color: '#10b981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
                               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"></path></svg> Lengkap
                             </span>

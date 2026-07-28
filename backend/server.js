@@ -29,6 +29,18 @@ const initDB = async () => {
     await pool.query("ALTER TABLE components ADD COLUMN IF NOT EXISTS parts TEXT");
     await pool.query("ALTER TABLE components ADD COLUMN IF NOT EXISTS images TEXT");
     await pool.query("ALTER TABLE products ADD COLUMN IF NOT EXISTS stock VARCHAR(50) DEFAULT 'ready'");
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS portfolios (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        client VARCHAR(255),
+        year VARCHAR(20),
+        tag VARCHAR(100),
+        description TEXT,
+        img_src TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
     console.log('Database tables verified.');
   } catch (err) {
     console.error('Error initializing DB:', err);
@@ -275,6 +287,63 @@ app.delete('/api/blogs/:id', authenticateToken, async (req, res) => {
     res.json({ message: 'Blog deleted' });
   } catch (err) {
     console.error('Error deleting blog:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// --- CRUD Portfolios ---
+
+app.get('/api/portfolios', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM portfolios ORDER BY id DESC');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching portfolios:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/api/portfolios', authenticateToken, async (req, res) => {
+  const { title, client, year, tag, description, img_src } = req.body;
+  try {
+    const result = await pool.query(
+      `INSERT INTO portfolios (title, client, year, tag, description, img_src) 
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [title, client, year, tag, description, img_src]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Error adding portfolio:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.put('/api/portfolios/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { title, client, year, tag, description, img_src } = req.body;
+  try {
+    const result = await pool.query(
+      `UPDATE portfolios 
+       SET title=$1, client=$2, year=$3, tag=$4, description=$5, img_src=$6
+       WHERE id=$7 RETURNING *`,
+      [title, client, year, tag, description, img_src, id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Portfolio not found' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error updating portfolio:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.delete('/api/portfolios/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('DELETE FROM portfolios WHERE id=$1 RETURNING *', [id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Portfolio not found' });
+    res.json({ message: 'Portfolio deleted' });
+  } catch (err) {
+    console.error('Error deleting portfolio:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
