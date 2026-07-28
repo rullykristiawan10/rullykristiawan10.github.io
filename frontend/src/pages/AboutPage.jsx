@@ -23,24 +23,6 @@ export default function AboutPage() {
             <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', marginBottom: '15px' }}>
               Dengan tenaga ahli bersertifikat dan berpengalaman, PT. Mitra Clima Electrindo berkomitmen untuk menghadirkan pekerjaan kelistrikan yang aman, berkualitas tinggi, dan sesuai dengan standar nasional maupun internasional. Kepuasan klien dan keselamatan kerja menjadi prioritas utama dalam setiap proyek yang kami kerjakan.
             </p>
-
-            <h3 style={{ fontSize: '20px', color: 'var(--primary)', marginTop: '25px', marginBottom: '10px' }}>Visi dan Misi Perusahaan</h3>
-            <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', marginBottom: '15px' }}>
-              PT. Mitra Clima Electrindo berkomitmen untuk menjadi perusahaan kontraktor listrik terdepan yang mengutamakan kualitas, keamanan, dan inovasi dalam setiap proyek yang dikerjakan.
-            </p>
-            
-            <h4 style={{ fontSize: '16px', color: 'var(--text)', marginBottom: '5px', fontWeight: 700 }}>Visi:</h4>
-            <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', marginBottom: '15px' }}>
-              Menjadi perusahaan electrical contractor dan instalasi listrik terpercaya, profesional, dan terdepan di Indonesia yang menghadirkan solusi kelistrikan berkualitas tinggi dengan standar keamanan internasional.
-            </p>
-            
-            <h4 style={{ fontSize: '16px', color: 'var(--text)', marginBottom: '5px', fontWeight: 700 }}>Misi:</h4>
-            <ul style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', margin: 0, paddingLeft: '20px', marginBottom: '25px' }}>
-              <li style={{ marginBottom: '8px' }}>Memberikan layanan instalasi listrik yang aman, handal, dan berkualitas tinggi kepada setiap klien.</li>
-              <li style={{ marginBottom: '8px' }}>Mengembangkan sumber daya manusia yang kompeten dan bersertifikat di bidang kelistrikan.</li>
-              <li>Menerapkan teknologi terkini dan inovasi dalam setiap proyek instalasi listrik untuk hasil yang optimal dan berkelanjutan.</li>
-            </ul>
-
             <a href="/profil-perusahaan.pdf" download className="btn-primary" style={{ display: 'inline-flex', marginTop: '10px' }}>
               Download Profil Perusahaan
             </a>
