@@ -23,6 +23,24 @@ export default function AboutPage() {
             <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', marginBottom: '15px' }}>
               Dengan tenaga ahli bersertifikat dan berpengalaman, PT. Mitra Clima Electrindo berkomitmen untuk menghadirkan pekerjaan kelistrikan yang aman, berkualitas tinggi, dan sesuai dengan standar nasional maupun internasional. Kepuasan klien dan keselamatan kerja menjadi prioritas utama dalam setiap proyek yang kami kerjakan.
             </p>
+
+            <h3 style={{ fontSize: '20px', color: 'var(--primary)', marginTop: '25px', marginBottom: '10px' }}>Visi dan Misi Perusahaan</h3>
+            <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', marginBottom: '15px' }}>
+              PT. Mitra Clima Electrindo berkomitmen untuk menjadi perusahaan kontraktor listrik terdepan yang mengutamakan kualitas, keamanan, dan inovasi dalam setiap proyek yang dikerjakan.
+            </p>
+            
+            <h4 style={{ fontSize: '16px', color: 'var(--text)', marginBottom: '5px', fontWeight: 700 }}>Visi:</h4>
+            <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', marginBottom: '15px' }}>
+              Menjadi perusahaan electrical contractor dan instalasi listrik terpercaya, profesional, dan terdepan di Indonesia yang menghadirkan solusi kelistrikan berkualitas tinggi dengan standar keamanan internasional.
+            </p>
+            
+            <h4 style={{ fontSize: '16px', color: 'var(--text)', marginBottom: '5px', fontWeight: 700 }}>Misi:</h4>
+            <ul style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', margin: 0, paddingLeft: '20px', marginBottom: '25px' }}>
+              <li style={{ marginBottom: '8px' }}>Memberikan layanan instalasi listrik yang aman, handal, dan berkualitas tinggi kepada setiap klien.</li>
+              <li style={{ marginBottom: '8px' }}>Mengembangkan sumber daya manusia yang kompeten dan bersertifikat di bidang kelistrikan.</li>
+              <li>Menerapkan teknologi terkini dan inovasi dalam setiap proyek instalasi listrik untuk hasil yang optimal dan berkelanjutan.</li>
+            </ul>
+
             <a href="/profil-perusahaan.pdf" download className="btn-primary" style={{ display: 'inline-flex', marginTop: '10px' }}>
               Download Profil Perusahaan
             </a>
@@ -30,25 +48,6 @@ export default function AboutPage() {
           <div style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
             <img src="/images/panel_front.png" alt="Pembuatan Panel Listrik" style={{ width: '100%', height: 'auto', display: 'block' }} />
           </div>
-        </div>
-
-        <div style={{ marginTop: '60px', padding: '40px', background: 'var(--bg-alt)', borderRadius: '12px', borderLeft: '4px solid var(--primary)' }}>
-          <h3 style={{ fontSize: '24px', color: 'var(--primary)', marginBottom: '15px' }}>Visi dan Misi Perusahaan</h3>
-          <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', marginBottom: '20px' }}>
-            PT. Mitra Clima Electrindo berkomitmen untuk menjadi perusahaan kontraktor listrik terdepan yang mengutamakan kualitas, keamanan, dan inovasi dalam setiap proyek yang dikerjakan.
-          </p>
-          
-          <h4 style={{ fontSize: '18px', color: 'var(--text)', marginBottom: '10px', fontWeight: 700 }}>Visi:</h4>
-          <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--muted)', marginBottom: '20px' }}>
-            Menjadi perusahaan electrical contractor dan instalasi listrik terpercaya, profesional, dan terdepan di Indonesia yang menghadirkan solusi kelistrikan berkualitas tinggi dengan standar keamanan internasional.
-          </p>
-          
-          <h4 style={{ fontSize: '18px', color: 'var(--text)', marginBottom: '10px', fontWeight: 700 }}>Misi:</h4>
-          <ul style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--muted)', margin: 0, paddingLeft: '20px' }}>
-            <li style={{ marginBottom: '8px' }}>Memberikan layanan instalasi listrik yang aman, handal, dan berkualitas tinggi kepada setiap klien.</li>
-            <li style={{ marginBottom: '8px' }}>Mengembangkan sumber daya manusia yang kompeten dan bersertifikat di bidang kelistrikan.</li>
-            <li>Menerapkan teknologi terkini dan inovasi dalam setiap proyek instalasi listrik untuk hasil yang optimal dan berkelanjutan.</li>
-          </ul>
         </div>
 
         <div style={{ marginTop: '80px', display: 'grid', gap: '30px', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
