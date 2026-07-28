@@ -24,10 +24,12 @@ export default function Navbar({ cartCount, onSearch, onCartClick }) {
         
         <div className={`nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
           <Link to="/" onClick={closeMobileMenu}>Beranda</Link>
+          <Link to="/tentang-kami" onClick={closeMobileMenu}>Tentang Kami</Link>
           <Link to="/custom-panel" onClick={closeMobileMenu}>Custom Panel</Link>
           <Link to="/panel-power" onClick={closeMobileMenu}>Panel Power</Link>
           <Link to="/panel-kontrol" onClick={closeMobileMenu}>Panel Kontrol</Link>
           <Link to="/komponen" onClick={closeMobileMenu}>Komponen</Link>
+          <Link to="/portofolio" onClick={closeMobileMenu}>Portofolio</Link>
           <Link to="/blog" onClick={closeMobileMenu}>Blog</Link>
           
           <div className="mobile-only-menu-actions" style={{ marginTop: '20px', flexDirection: 'column', gap: '10px', padding: '0 20px' }}>
