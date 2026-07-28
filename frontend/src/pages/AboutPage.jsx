@@ -1,5 +1,3 @@
-import ContactSection from '../components/ContactSection';
-
 export default function AboutPage() {
   return (
     <>
@@ -50,8 +48,6 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
-      
-      <ContactSection />
     </>
   );
 }
