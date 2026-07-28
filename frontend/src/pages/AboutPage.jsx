@@ -32,6 +32,25 @@ export default function AboutPage() {
           </div>
         </div>
 
+        <div style={{ marginTop: '60px', padding: '40px', background: 'var(--bg-alt)', borderRadius: '12px', borderLeft: '4px solid var(--primary)' }}>
+          <h3 style={{ fontSize: '24px', color: 'var(--primary)', marginBottom: '15px' }}>Visi dan Misi Perusahaan</h3>
+          <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', marginBottom: '20px' }}>
+            PT. Mitra Clima Electrindo berkomitmen untuk menjadi perusahaan kontraktor listrik terdepan yang mengutamakan kualitas, keamanan, dan inovasi dalam setiap proyek yang dikerjakan.
+          </p>
+          
+          <h4 style={{ fontSize: '18px', color: 'var(--text)', marginBottom: '10px', fontWeight: 700 }}>Visi:</h4>
+          <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--muted)', marginBottom: '20px' }}>
+            Menjadi perusahaan electrical contractor dan instalasi listrik terpercaya, profesional, dan terdepan di Indonesia yang menghadirkan solusi kelistrikan berkualitas tinggi dengan standar keamanan internasional.
+          </p>
+          
+          <h4 style={{ fontSize: '18px', color: 'var(--text)', marginBottom: '10px', fontWeight: 700 }}>Misi:</h4>
+          <ul style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--muted)', margin: 0, paddingLeft: '20px' }}>
+            <li style={{ marginBottom: '8px' }}>Memberikan layanan instalasi listrik yang aman, handal, dan berkualitas tinggi kepada setiap klien.</li>
+            <li style={{ marginBottom: '8px' }}>Mengembangkan sumber daya manusia yang kompeten dan bersertifikat di bidang kelistrikan.</li>
+            <li>Menerapkan teknologi terkini dan inovasi dalam setiap proyek instalasi listrik untuk hasil yang optimal dan berkelanjutan.</li>
+          </ul>
+        </div>
+
         <div style={{ marginTop: '80px', display: 'grid', gap: '30px', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
           <div style={{ padding: '30px', background: 'var(--bg-alt)', borderRadius: '12px', textAlign: 'center' }}>
             <div style={{ fontSize: '40px', marginBottom: '15px' }}>🛡️</div>
