@@ -15,10 +15,13 @@ export default function AboutPage() {
           <div>
             <h2 style={{ fontSize: '28px', color: 'var(--primary)', marginBottom: '20px' }}>PT. Mitra Clima Electrindo</h2>
             <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', marginBottom: '15px' }}>
-              Mitra Clima Pro adalah penyedia layanan pembuatan panel listrik kustom, Motor Control Panel (MCP), panel power, serta distributor komponen kelistrikan industri terpercaya di Indonesia.
+              PT. Mitra Clima Electrindo adalah perusahaan yang bergerak di bidang electrical contractor dan instalasi listrik yang berpengalaman dan terpercaya di Indonesia. Berdiri dengan komitmen untuk memberikan solusi kelistrikan terbaik, kami telah melayani berbagai sektor industri, komersial, dan perumahan di seluruh Indonesia.
             </p>
             <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', marginBottom: '15px' }}>
-              Kami berkomitmen untuk menyediakan solusi kelistrikan yang aman, andal, dan efisien untuk berbagai skala industri. Dengan dukungan teknisi yang berpengalaman dan penggunaan komponen tier-1 dari merek global terkemuka, kami memastikan setiap panel yang diproduksi memenuhi standar kualitas dan keamanan industri tertinggi.
+              Bidang usaha kami meliputi electrical contractor, instalasi listrik industri, instalasi listrik komersial, instalasi listrik perumahan, maintenance sistem kelistrikan, instalasi panel listrik dan switchboard, grounding system, serta lightning protection system.
+            </p>
+            <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text)', marginBottom: '15px' }}>
+              Dengan tenaga ahli bersertifikat dan berpengalaman, PT. Mitra Clima Electrindo berkomitmen untuk menghadirkan pekerjaan kelistrikan yang aman, berkualitas tinggi, dan sesuai dengan standar nasional maupun internasional. Kepuasan klien dan keselamatan kerja menjadi prioritas utama dalam setiap proyek yang kami kerjakan.
             </p>
             <a href="/profil-perusahaan.pdf" download className="btn-primary" style={{ display: 'inline-flex', marginTop: '10px' }}>
               Download Profil Perusahaan
