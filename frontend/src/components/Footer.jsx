@@ -17,7 +17,7 @@ export default function Footer() {
             </Link>
             <p>Distributor dan fabrikasi panel listrik terpercaya. Komponen original, garansi resmi, pengiriman seluruh Indonesia.</p>
             <div className="footer-socials">
-              <a href="#" className="social-btn" aria-label="LinkedIn">
+              <a href="https://www.linkedin.com/in/pt-mitra-clima-electrindo-460645422?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="LinkedIn">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
                   <rect width="24" height="24" rx="4" fill="#0A66C2" />
                   <path d="M8 19H5V10h3v9zM6.5 8.7c-.9 0-1.5-.6-1.5-1.5S5.6 5.7 6.5 5.7 8 6.3 8 7.2c0 .9-.6 1.5-1.5 1.5z" fill="#fff" />
