@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-
+import ReactMarkdown from 'react-markdown';
 export default function BlogArticle({ blogs = [] }) {
   const { slug } = useParams();
   
@@ -80,12 +80,13 @@ export default function BlogArticle({ blogs = [] }) {
           </div>
         )}
         
-        {/* The content is dangerously set because it could be HTML/Markdown from the admin panel */}
+        {/* The content is now rendered with ReactMarkdown */}
         <div 
           className="blog-content" 
           style={{ fontSize: '18px', lineHeight: 1.8, color: '#374151' }}
-          dangerouslySetInnerHTML={{ __html: blog.content?.replace(/\n/g, '<br />') }} 
-        />
+        >
+          <ReactMarkdown>{blog.content || ''}</ReactMarkdown>
+        </div>
         
       </article>
     </div>
