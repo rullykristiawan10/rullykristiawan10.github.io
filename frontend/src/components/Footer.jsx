@@ -24,20 +24,17 @@ export default function Footer() {
                   <path d="M19 19h-3v-4.5c0-1.1-.4-1.8-1.3-1.8-.8 0-1.2.5-1.4 1-.1.2-.1.5-.1.8V19h-3s.1-8 0-9h3v1.3c.4-.6 1.1-1.5 2.7-1.5 2 0 3.5 1.3 3.5 4.1V19z" fill="#fff" />
                 </svg>
               </a>
-              <a href="#" className="social-btn" aria-label="Tokopedia">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                  <path d="M4 7h16v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z" fill="#42b549" />
-                  <path d="M8 7V5a4 4 0 0 1 8 0v2" stroke="#42b549" strokeWidth="2" strokeLinecap="round" />
-                  <circle cx="9" cy="13" r="2.5" fill="#fff" />
-                  <circle cx="15" cy="13" r="2.5" fill="#fff" />
-                  <path d="M12 17l1.5-2h-3L12 17z" fill="#fff" />
+              <a href="#" className="social-btn" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                 </svg>
               </a>
-              <a href="#" className="social-btn" aria-label="Shopee">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                  <path d="M4 7h16v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z" fill="#ee4d2d" />
-                  <path d="M8 7V5a4 4 0 0 1 8 0v2" stroke="#ee4d2d" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M14.5 10.5 C 14.5 9 13 8.5 11.5 8.5 C 10 8.5 9 9 9 10 C 9 11 10 11.5 11 11.5 C 13 11.5 14 12 14 13.5 C 14 15 13 16 11.5 16 C 9.5 16 8.5 15 8 14 L 9.5 13 C 10 14 10.5 14.5 11.5 14.5 C 12.5 14.5 12.5 14 12.5 13.5 C 12.5 13 11.5 12.5 10.5 12.5 C 8.5 12.5 7.5 12 7.5 10 C 7.5 8.5 9 7 11.5 7 C 13.5 7 14.5 8 15 9 L 14.5 10.5 Z" fill="#fff" />
+              <a href="#" className="social-btn" aria-label="YouTube">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+                  <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
                 </svg>
               </a>
               <a href="https://mitraclimaelectrindo.com/" target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="Website">

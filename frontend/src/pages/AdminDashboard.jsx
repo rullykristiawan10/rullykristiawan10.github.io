@@ -540,7 +540,7 @@ export default function AdminDashboard() {
                     <thead>
                       {activeTab === 'products' && <tr><th>ID</th><th>Nama Produk</th><th>Kategori</th><th>Brand</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
                       {activeTab === 'components' && <tr><th>ID</th><th>Nama Komponen</th><th>Kategori</th><th>Supplier</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
-                      {activeTab === 'blogs' && <tr><th>ID</th><th>Gambar</th><th>Judul Artikel</th><th>Slug (URL)</th><th>Tag</th><th>Tanggal</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
+                      {activeTab === 'blogs' && <tr><th>ID</th><th>Gambar</th><th>Judul Artikel</th><th>Slug (URL)</th><th>Tanggal</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
                       {activeTab === 'portfolios' && <tr><th>ID</th><th>Gambar</th><th>Judul Proyek</th><th>Klien</th><th>Tahun</th><th>Tag</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
                       {activeTab === 'messages' && <tr><th>Tanggal</th><th>Nama</th><th>Email / WA</th><th>Pesan</th><th>Status</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
                     </thead>
@@ -572,7 +572,6 @@ export default function AdminDashboard() {
                               <td><img src={item.img_src} alt={item.title} style={{width:'50px', height:'50px', objectFit:'cover', borderRadius:'4px'}} /></td>
                               <td style={{ fontWeight: 600 }}>{item.title}</td>
                               <td><span style={{background:'#f1f5f9', padding:'2px 6px', borderRadius:'4px', fontSize:'12px'}}>{item.slug}</span></td>
-                              <td><span className="badge2">{item.tag}</span></td>
                               <td>{item.date}</td>
                               <td style={{ textAlign: 'right' }}>
                                 <button className="btn-edit" onClick={() => handleOpenModal('edit', item)}>Edit</button>
@@ -884,15 +883,6 @@ export default function AdminDashboard() {
                             <input type="text" name="date" value={formData.date || ''} onChange={handleChange} style={{ paddingLeft: '40px' }} placeholder="15 Mei 2026" />
                           </div>
                         </div>
-                        <div className="form-group" style={{ flex: 1, margin: 0 }}>
-                          <label>Tag / Kategori</label>
-                          <div style={{ position: 'relative' }}>
-                            <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)' }}>
-                              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
-                            </span>
-                            <input type="text" name="tag" value={formData.tag || ''} onChange={handleChange} style={{ paddingLeft: '40px' }} placeholder="E.g. Tips, Pendingin" />
-                          </div>
-                        </div>
                       </div>
 
                       <div className="form-group" style={{ margin: 0 }}>
@@ -1016,7 +1006,7 @@ export default function AdminDashboard() {
                         ) : (
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--muted)', fontSize: '12px', fontStyle: 'italic' }}>Belum ada gambar</div>
                         )}
-                        {formData.tag && (
+                        {(formData.tag && activeTab === 'portfolios') && (
                           <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'var(--accent)', color: 'var(--dark)', padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>{formData.tag}</span>
                         )}
                       </div>
