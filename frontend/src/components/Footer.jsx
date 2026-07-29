@@ -24,7 +24,7 @@ export default function Footer() {
                   <path d="M19 19h-3v-4.5c0-1.1-.4-1.8-1.3-1.8-.8 0-1.2.5-1.4 1-.1.2-.1.5-.1.8V19h-3s.1-8 0-9h3v1.3c.4-.6 1.1-1.5 2.7-1.5 2 0 3.5 1.3 3.5 4.1V19z" fill="#fff" />
                 </svg>
               </a>
-              <a href="#" className="social-btn" aria-label="Instagram">
+              <a href="https://www.instagram.com/ptmitraclimaelectrindo?utm_source=qr&igsh=ZTdic29tOG9wNXEz" target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="Instagram">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
