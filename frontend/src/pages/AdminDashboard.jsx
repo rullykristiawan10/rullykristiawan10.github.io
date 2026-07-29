@@ -242,6 +242,23 @@ export default function AdminDashboard() {
     });
   };
 
+  const insertFormatting = (prefix, suffix) => {
+    const textarea = document.getElementById('blog-content-textarea');
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const currentContent = formData.content || '';
+    const selectedText = currentContent.substring(start, end);
+    const newContent = currentContent.substring(0, start) + prefix + selectedText + suffix + currentContent.substring(end);
+    
+    setFormData(prev => ({...prev, content: newContent}));
+    
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + prefix.length, end + prefix.length);
+    }, 0);
+  };
+
   const handleImageUpload = async (e, fieldName = 'img_src') => {
     const file = e.target.files[0];
     if (!file) return;
@@ -893,9 +910,15 @@ export default function AdminDashboard() {
                       <div className="form-group" style={{ margin: 0 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                           <label style={{ margin: 0 }}>Isi Konten *</label>
-                          <span style={{ fontSize: '11px', color: 'var(--muted)', background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontWeight: 600 }}>Markdown Supported</span>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <button type="button" onClick={() => insertFormatting('# ', '')} style={{ padding: '4px 8px', background: '#e2e8f0', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontSize: '12px', color: '#334155' }}>H1</button>
+                            <button type="button" onClick={() => insertFormatting('## ', '')} style={{ padding: '4px 8px', background: '#e2e8f0', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontSize: '12px', color: '#334155' }}>H2</button>
+                            <button type="button" onClick={() => insertFormatting('### ', '')} style={{ padding: '4px 8px', background: '#e2e8f0', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontSize: '12px', color: '#334155' }}>H3</button>
+                            <button type="button" onClick={() => insertFormatting('**', '**')} style={{ padding: '4px 8px', background: '#e2e8f0', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer', fontWeight: 800, fontSize: '12px', color: '#334155' }}>B</button>
+                            <button type="button" onClick={() => insertFormatting('*', '*')} style={{ padding: '4px 8px', background: '#e2e8f0', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer', fontStyle: 'italic', fontWeight: 600, fontSize: '12px', fontFamily: 'serif', color: '#334155' }}>I</button>
+                          </div>
                         </div>
-                        <textarea name="content" value={formData.content || ''} onChange={handleChange} rows="14" placeholder="Tulis konten lengkap di sini... Anda bisa menggunakan format Markdown seperti # Heading, **bold**, *italic*, dll." required style={{ fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: '#fafafa', border: '1px solid var(--border)' }}></textarea>
+                        <textarea id="blog-content-textarea" name="content" value={formData.content || ''} onChange={handleChange} rows="14" placeholder="Tulis konten lengkap di sini... Anda bisa menggunakan format Markdown seperti # Heading, **bold**, *italic*, dll." required style={{ fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: '#fafafa', border: '1px solid var(--border)' }}></textarea>
                       </div>
                     </div>
                   )}
