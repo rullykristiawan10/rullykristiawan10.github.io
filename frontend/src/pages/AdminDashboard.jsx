@@ -939,7 +939,7 @@ export default function AdminDashboard() {
                             <th style={{ padding: '12px 10px', width: '40px', textAlign: 'center' }}>No</th>
                             <th style={{ padding: '12px 10px', minWidth: '150px' }}>Komponen</th>
                             <th style={{ padding: '12px 10px', width: '110px', textAlign: 'center' }}>Qty</th>
-                            <th style={{ padding: '12px 10px', minWidth: '130px' }}>Harga Satuan</th>
+                            <th style={{ padding: '12px 10px', minWidth: '130px' }}>Brand</th>
                             <th style={{ padding: '12px 10px', minWidth: '100px', textAlign: 'center' }}>Stok</th>
                             <th style={{ padding: '12px 10px', width: '50px', textAlign: 'center' }}>Aksi</th>
                           </tr>
@@ -954,7 +954,7 @@ export default function AdminDashboard() {
                                   handlePartChange(index, 'name', val);
                                   const selectedComp = data.components.find(c => c.name === val);
                                   if (selectedComp) {
-                                    handlePartChange(index, 'price', selectedComp.price || 0);
+                                    if (selectedComp.brand) handlePartChange(index, 'brand', selectedComp.brand);
                                     if (selectedComp.stock) handlePartChange(index, 'stock', selectedComp.stock);
                                   }
                                 }} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '13px', boxSizing: 'border-box' }} placeholder="Nama komponen" />
@@ -970,7 +970,7 @@ export default function AdminDashboard() {
                                 </div>
                               </td>
                               <td style={{ padding: '8px 10px' }}>
-                                <input type="number" value={part.price || ''} onChange={(e) => handlePartChange(index, 'price', e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '13px', boxSizing: 'border-box' }} placeholder="Rp..." />
+                                <input type="text" value={part.brand || ''} onChange={(e) => handlePartChange(index, 'brand', e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '13px', boxSizing: 'border-box' }} placeholder="Brand..." />
                               </td>
                               <td style={{ padding: '8px 10px', textAlign: 'center' }}>
                                 <input 
