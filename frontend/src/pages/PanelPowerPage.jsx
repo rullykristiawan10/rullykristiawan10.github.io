@@ -16,7 +16,7 @@ export const powerProducts = [
 
 export default function PanelPowerPage({ openModal, isFeatured, products = [] }) {
   // Get DB products matching this category
-  const apiPowerProducts = products.filter(p => p.type === 'distribusi' || (p.cat && p.cat.toUpperCase() === 'PANEL DISTRIBUSI'));
+  const apiPowerProducts = products.filter(p => p.type === 'distribusi' || p.type === 'power' || (p.cat && (p.cat.toUpperCase().includes('DISTRIBUSI') || p.cat.toUpperCase().includes('POWER'))));
   
   // Format API products to match component props
   const formattedApiProducts = apiPowerProducts.map(p => {

@@ -11,6 +11,15 @@ const whatsapp = require('./whatsapp');
 // Initialize WhatsApp Bot
 whatsapp.connectToWhatsApp();
 
+// Global Error Handlers to prevent server crash
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 // Auto-migrate tables
 const initDB = async () => {
   try {
