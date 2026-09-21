@@ -322,7 +322,7 @@ export default function AdminDashboard() {
   const addPart = () => {
     setFormData(prev => ({
       ...prev,
-      parts: [...(Array.isArray(prev.parts) ? prev.parts : []), { name: '', qty: 1, price: '', notes: '' }]
+      parts: [...(Array.isArray(prev.parts) ? prev.parts : []), { name: '', qty: 1, brand: '', stock: 'ready', price: '', notes: '' }]
     }));
   };
 
