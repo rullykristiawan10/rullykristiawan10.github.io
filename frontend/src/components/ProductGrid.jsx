@@ -243,7 +243,8 @@ export default function ProductGrid({ products, search, openModal, isFeatured })
                     
                     <div className="card-specs">
                       <span className="spec-item"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>{p.components} komponen</span>
-                      <span className="spec-item"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>{p.voltage} {p.phase}</span>
+                      <span className="spec-item"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>{p.voltage || '380V'} {p.phase || '3-Phase'}</span>
+                      {p.size && <span className="spec-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>{p.size}</span>}
                     </div>
                     <div className="card-price">
                       <div className="price-from">Mulai</div>

@@ -38,6 +38,7 @@ const initDB = async () => {
     await pool.query("ALTER TABLE components ADD COLUMN IF NOT EXISTS parts TEXT");
     await pool.query("ALTER TABLE components ADD COLUMN IF NOT EXISTS images TEXT");
     await pool.query("ALTER TABLE products ADD COLUMN IF NOT EXISTS stock VARCHAR(50) DEFAULT 'ready'");
+    await pool.query("ALTER TABLE products ADD COLUMN IF NOT EXISTS size VARCHAR(100)");
     await pool.query(`
       CREATE TABLE IF NOT EXISTS portfolios (
         id SERIAL PRIMARY KEY,
@@ -147,12 +148,12 @@ app.get('/api/admin/verify', authenticateToken, (req, res) => {
 // --- CRUD Products ---
 
 app.post('/api/products', authenticateToken, async (req, res) => {
-  const { name, cat, type, brand, method, power, kw, phase, voltage, components, price, features, parts, stock } = req.body;
+  const { name, cat, type, brand, method, power, kw, phase, voltage, size, components, price, features, parts, stock } = req.body;
   try {
     const result = await pool.query(
-      `INSERT INTO products (name, cat, type, brand, method, power, kw, phase, voltage, components, price, features, parts, stock) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
-      [name, cat, type, brand, method, power || 0, kw || 0, phase, voltage, components || 0, price || 0, 
+      `INSERT INTO products (name, cat, type, brand, method, power, kw, phase, voltage, size, components, price, features, parts, stock) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *`,
+      [name, cat, type, brand, method, power || 0, kw || 0, phase, voltage, size || '', components || 0, price || 0, 
        features ? JSON.stringify(features) : '[]', parts ? JSON.stringify(parts) : '[]', stock || 'ready']
     );
     res.status(201).json(result.rows[0]);
@@ -164,14 +165,14 @@ app.post('/api/products', authenticateToken, async (req, res) => {
 
 app.put('/api/products/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { name, cat, type, brand, method, power, kw, phase, voltage, components, price, features, parts, stock } = req.body;
+  const { name, cat, type, brand, method, power, kw, phase, voltage, size, components, price, features, parts, stock } = req.body;
   try {
     const result = await pool.query(
       `UPDATE products 
-       SET name=$1, cat=$2, type=$3, brand=$4, method=$5, power=$6, kw=$7, phase=$8, voltage=$9, components=$10, price=$11, features=$12, parts=$13, stock=$15
-       WHERE id=$14 RETURNING *`,
-      [name, cat, type, brand, method, power || 0, kw || 0, phase, voltage, components || 0, price || 0, 
-       features ? JSON.stringify(features) : '[]', parts ? JSON.stringify(parts) : '[]', id, stock || 'ready']
+       SET name=$1, cat=$2, type=$3, brand=$4, method=$5, power=$6, kw=$7, phase=$8, voltage=$9, size=$10, components=$11, price=$12, features=$13, parts=$14, stock=$15
+       WHERE id=$16 RETURNING *`,
+      [name, cat, type, brand, method, power || 0, kw || 0, phase, voltage, size || '', components || 0, price || 0, 
+       features ? JSON.stringify(features) : '[]', parts ? JSON.stringify(parts) : '[]', stock || 'ready', id]
     );
     if (result.rows.length === 0) return res.status(404).json({ error: 'Product not found' });
     res.json(result.rows[0]);

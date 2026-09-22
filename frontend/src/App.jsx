@@ -263,10 +263,20 @@ function AppContent() {
 
   const renderModalSpecs = (p) => {
     if (!p) return null;
+    let size = p.size;
+    if (!size && Array.isArray(p.parts)) {
+      for (const part of p.parts) {
+        if (/panel\s*box|enclosure|box\s*indoor|box\s*wallmount/i.test(part.name || '')) {
+          const match = (part.name || '').match(/(\d+[\s×xX]*\d+[\s×xX]*\d+)/);
+          if (match) { size = match[1].replace(/×/g, 'x'); break; }
+        }
+      }
+    }
     return (
       <>
         {p.voltage && <div className="modal-spec"><div className="spec-key">Tegangan</div><div className="spec-val">{p.voltage} {p.phase}</div></div>}
         {p.kw !== undefined && <div className="modal-spec"><div className="spec-key">Daya Motor</div><div className="spec-val">{p.kw > 0 ? p.kw + ' kW' : '—'}</div></div>}
+        {size && <div className="modal-spec"><div className="spec-key">Ukuran Panel</div><div className="spec-val">{size}</div></div>}
         {p.components && !p.supplier && <div className="modal-spec"><div className="spec-key">Jumlah Komponen</div><div className="spec-val">{p.components} komponen</div></div>}
         {p.method && <div className="modal-spec"><div className="spec-key">Metode Start</div><div className="spec-val">{p.method}</div></div>}
       </>

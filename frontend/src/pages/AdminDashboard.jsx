@@ -140,6 +140,21 @@ export default function AdminDashboard() {
     navigate('/admin/login');
   };
 
+  const extractPanelSize = (parts) => {
+    if (typeof parts === 'string') {
+      try { parts = JSON.parse(parts); } catch(e) { parts = []; }
+    }
+    if (!Array.isArray(parts)) return '';
+    for (const part of parts) {
+      const name = part.name || '';
+      if (/panel\s*box|enclosure|box\s*indoor|box\s*wallmount/i.test(name)) {
+        const match = name.match(/(\d+[\s×xX]*\d+[\s×xX]*\d+)/);
+        if (match) return match[1].replace(/×/g, 'x');
+      }
+    }
+    return '';
+  };
+
   const handleOpenModal = (mode, item = null) => {
     setModalMode(mode);
     if (item) {
@@ -149,6 +164,9 @@ export default function AdminDashboard() {
       }
       if (typeof parsedItem.parts === 'string') {
         try { parsedItem.parts = JSON.parse(parsedItem.parts); } catch(e) { parsedItem.parts = []; }
+      }
+      if (!parsedItem.size && parsedItem.parts) {
+        parsedItem.size = extractPanelSize(parsedItem.parts);
       }
       if (mode === 'add') {
         delete parsedItem.id; // Remove ID for duplication
@@ -555,7 +573,7 @@ export default function AdminDashboard() {
                 <div className="table-responsive">
                   <table className="admin-table">
                     <thead>
-                      {activeTab === 'products' && <tr><th>ID</th><th>Nama Produk</th><th>Kategori</th><th>Brand</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
+                      {activeTab === 'products' && <tr><th>ID</th><th>Nama Produk</th><th>Kategori</th><th>Brand</th><th>Ukuran</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
                       {activeTab === 'components' && <tr><th>ID</th><th>Nama Komponen</th><th>Kategori</th><th>Supplier</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
                       {activeTab === 'blogs' && <tr><th>ID</th><th>Gambar</th><th>Judul Artikel</th><th>Slug (URL)</th><th>Tanggal</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
                       {activeTab === 'portfolios' && <tr><th>ID</th><th>Gambar</th><th>Judul Proyek</th><th>Klien</th><th>Tahun</th><th>Tag</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
@@ -614,6 +632,13 @@ export default function AdminDashboard() {
                               <td style={{fontWeight: 600}}>{item.name}</td>
                               <td>{item.cat || item.category}</td>
                               <td>{item.brand || item.supplier}</td>
+                              {activeTab === 'products' && (
+                                <td>
+                                  <span style={{fontSize: '12px', background: '#f1f5f9', padding: '2px 8px', borderRadius: '4px', whiteSpace: 'nowrap'}}>
+                                    {item.size || extractPanelSize(item.parts) || '-'}
+                                  </span>
+                                </td>
+                              )}
                               <td className="admin-price">{formatRp(item.price)}</td>
                               <td style={{textAlign: 'center'}}>{renderAggregateStock(item)}</td>
                               <td>
@@ -709,6 +734,17 @@ export default function AdminDashboard() {
                         <div className="form-group">
                           <label>Phase</label>
                           <input type="text" name="phase" value={formData.phase || ''} onChange={handleChange} />
+                        </div>
+                      </div>
+
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label>Ukuran Panel (Box Size)</label>
+                          <input type="text" name="size" value={formData.size || ''} onChange={handleChange} placeholder="Contoh: 35x25x15 cm" />
+                        </div>
+                        <div className="form-group">
+                          <label>Tegangan (voltage)</label>
+                          <input type="text" name="voltage" value={formData.voltage || ''} onChange={handleChange} placeholder="Contoh: 380V" />
                         </div>
                       </div>
 
