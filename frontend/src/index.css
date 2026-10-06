@@ -132,7 +132,7 @@ nav {
   flex: 1;
 }
 .nav-links a {
-  color: var(--text);
+  color: #ffffff;
   font-size: 14.5px;
   font-weight: 600;
   text-decoration: none;
@@ -146,8 +146,8 @@ nav {
 }
 .nav-links a:hover,
 .nav-links a.active {
-  color: var(--primary);
-  background: rgba(0, 86, 210, 0.05);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
 }
 .nav-links a.active::after {
   content: "";
@@ -157,7 +157,7 @@ nav {
   transform: translateX(-50%);
   width: 36px;
   height: 3px;
-  background: var(--accent);
+  background: #FFD700;
   border-radius: 3px 3px 0 0;
 }
 .nav-right {
@@ -237,8 +237,8 @@ nav {
   transform: translateY(-1px);
 }
 .nav-icon {
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
   width: 38px;
   height: 38px;
@@ -246,14 +246,14 @@ nav {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--text);
+  color: #ffffff;
   transition: all 0.2s;
   text-decoration: none;
 }
 .nav-icon:hover {
-  background: rgba(0, 86, 210, 0.08);
-  color: var(--primary);
-  border-color: rgba(0, 86, 210, 0.1);
+  background: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
 }
 .badge {
   position: relative;
@@ -2592,12 +2592,19 @@ footer::before {
     width: 100%;
     box-sizing: border-box;
     text-align: left;
+    color: #ffffff !important;
+  }
+  .nav-links a:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
   }
   .nav-links a.active::after {
     display: none;
   }
   .nav-links a.active {
-    background: rgba(0, 86, 210, 0.08);
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    font-weight: 700;
   }
   .hidden-mobile {
     display: none !important;
@@ -2607,7 +2614,8 @@ footer::before {
     align-items: center;
     gap: 10px;
     margin-top: 4px;
-    background: rgba(0, 86, 210, 0.03);
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
   }
   .mobile-only-menu-actions {
     display: flex !important;
@@ -2618,14 +2626,14 @@ footer::before {
     justify-content: center;
     background: transparent;
     border: none;
-    color: var(--text);
+    color: #ffffff;
     padding: 8px;
     cursor: pointer;
     margin-left: 8px;
     border-radius: 8px;
   }
   .mobile-menu-toggle:active {
-    background: rgba(0, 86, 210, 0.05);
+    background: rgba(255, 255, 255, 0.2);
   }
   .nav-right {
     margin-left: auto;
