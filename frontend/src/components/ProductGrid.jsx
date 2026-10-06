@@ -212,7 +212,7 @@ export default function ProductGrid({ products, search, openModal, isFeatured })
               displayProducts.map((p, i) => (
                 <div key={p.id || i} className="product-card glass-panel shadow-premium animate-fade-in-up" style={{ animationDelay: `${i * 0.05}s` }}>
                   <div className="card-top">
-                    {p.kw > 0 && <div className="power-badge"><span>{p.kw < 10 ? p.kw : p.kw}kW</span><span className="unit">Motor</span></div>}
+                    {p.kw > 0 && <div className="power-badge"><span>{p.kw}kW</span><span className="unit">Motor</span></div>}
                   </div>
                   <div className="card-img">{getPanelSVG()}</div>
                   <div className="card-body">
