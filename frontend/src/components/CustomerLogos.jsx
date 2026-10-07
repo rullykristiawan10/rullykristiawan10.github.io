@@ -14,7 +14,7 @@ const customerList = [
   { id: 'marin_liza', name: 'Marin Liza Group', src: '/images/customers/marin_liza.png', category: 'Gedung & Komersial' },
   { id: 'lapi', name: 'PT LAPI Laboratories', src: '/images/customers/lapi.png', category: 'Farmasi' },
   { id: 'dairygold', name: 'Dairygold', src: '/images/customers/dairygold.png', category: 'Manufaktur' },
-  { id: 'nabati', name: 'PT Kaldu Sari Nabati', src: '/images/customers/nabati.png', category: 'Consumer Goods' },
+  { id: 'nabati', name: 'PT Kaldu Sari Nabati (Nabati Group)', src: '/images/customers/nabati.png', category: 'Consumer Goods' },
   { id: 'pupuk_kujang', name: 'PT Pupuk Kujang Cikampek', src: '/images/customers/pupuk_kujang.png', category: 'BUMN Industri' },
   { id: 'kino', name: 'PT Kino Indonesia Tbk', src: '/images/customers/kino.png', category: 'Consumer Goods' },
   { id: 'c3_cady', name: 'Cady Indonesia Sehat', src: '/images/customers/c3_cady.png', category: 'Kesehatan' }
