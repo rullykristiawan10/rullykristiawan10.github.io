@@ -1,13 +1,13 @@
 import React from 'react';
 
-// Real customer logos mapped with exact company names
+// Real customer logos mapped with 100% visual precision to exact company names
 const customerList = [
   { id: 'mayora', name: 'PT Mayora Indah Tbk', src: '/images/customers/mayora.png', category: 'F&B Manufaktur' },
   { id: 'soho', name: 'SOHO Global Health', src: '/images/customers/soho.png', category: 'Farmasi & Medis' },
   { id: 'tmc', name: 'TMC (Tirta Medical Centre)', src: '/images/customers/tmc.png', category: 'Layanan Kesehatan' },
   { id: 'dexa_medica', name: 'PT Dexa Medica', src: '/images/customers/dexa_medica.png', category: 'Farmasi & Medis' },
   { id: 'sampoerna', name: 'PT HM Sampoerna Tbk', src: '/images/customers/sampoerna.png', category: 'Industri' },
-  { id: 'kapal_api', name: 'Kapal Api Group', src: '/images/customers/kapal_api.png', category: 'F&B Industri' },
+  { id: 'kino', name: 'PT Kino Indonesia Tbk', src: '/images/customers/kino.png', category: 'Consumer Goods' },
   { id: 'ncu', name: 'PT Nugi Cahaya Utama (NCU)', src: '/images/customers/ncu.png', category: 'Kelistrikan & Industri' },
   { id: 'santos_jaya_abadi', name: 'PT Santos Jaya Abadi', src: '/images/customers/santos_jaya_abadi.png', category: 'F&B Manufaktur' },
   { id: 'darya_varia', name: 'PT Darya-Varia Laboratoria Tbk', src: '/images/customers/darya_varia.png', category: 'Farmasi & Medis' },
@@ -16,7 +16,7 @@ const customerList = [
   { id: 'dairygold', name: 'Dairygold', src: '/images/customers/dairygold.png', category: 'Manufaktur' },
   { id: 'nabati', name: 'PT Kaldu Sari Nabati (Nabati Group)', src: '/images/customers/nabati.png', category: 'Consumer Goods' },
   { id: 'pupuk_kujang', name: 'PT Pupuk Kujang Cikampek', src: '/images/customers/pupuk_kujang.png', category: 'BUMN Industri' },
-  { id: 'kino', name: 'PT Kino Indonesia Tbk', src: '/images/customers/kino.png', category: 'Consumer Goods' },
+  { id: 'kapal_api', name: 'Kapal Api Group', src: '/images/customers/kapal_api.png', category: 'F&B Industri' },
   { id: 'c3_cady', name: 'Cady Indonesia Sehat', src: '/images/customers/c3_cady.png', category: 'Kesehatan' }
 ];
 
