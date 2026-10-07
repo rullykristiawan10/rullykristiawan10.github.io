@@ -3,6 +3,7 @@ import ProductGrid from '../components/ProductGrid';
 import PanelPowerPage from './PanelPowerPage';
 import PanelKontrolPage from './PanelKontrolPage';
 import ComponentSection from '../components/ComponentSection';
+import CustomerLogos from '../components/CustomerLogos';
 import BlogSection from '../components/BlogSection';
 import ContactSection from '../components/ContactSection';
 
@@ -18,8 +19,10 @@ export default function Home({ products, components, blogs, search, openModal })
       <PanelPowerPage openModal={openModal} isFeatured={true} products={products} />
       <PanelKontrolPage openModal={openModal} isFeatured={true} products={products} />
       <ComponentSection components={components} search={search} openModal={openModal} isFeatured={true} />
+      <CustomerLogos />
       <BlogSection blogs={blogs} isFeatured={true} />
       <ContactSection />
     </>
   );
 }
+

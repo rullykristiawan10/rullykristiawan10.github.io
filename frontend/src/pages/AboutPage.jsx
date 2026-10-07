@@ -1,3 +1,5 @@
+import CustomerLogos from '../components/CustomerLogos';
+
 export default function AboutPage() {
   return (
     <>
@@ -48,6 +50,9 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
+
+      <CustomerLogos />
     </>
   );
 }
+

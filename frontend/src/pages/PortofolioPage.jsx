@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import CustomerLogos from '../components/CustomerLogos';
 
 const fallbackPortfolios = [
   {
@@ -134,6 +135,11 @@ export default function PortofolioPage() {
           </div>
         )}
       </div>
+
+      <div style={{ marginTop: '60px' }}>
+        <CustomerLogos />
+      </div>
     </div>
   );
 }
+
