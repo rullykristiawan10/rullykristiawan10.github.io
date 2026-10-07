@@ -1,23 +1,23 @@
 import React from 'react';
 
-// Real official customer logos downloaded directly from dwimitrateknindo.com
+// Real customer logos mapped with exact company names
 const customerList = [
-  { id: 'dairygold', name: 'Dairygold', src: '/images/customers/dairygold.png', category: 'F&B Manufaktur' },
-  { id: 'kino', name: 'Kino Indonesia', src: '/images/customers/kino.png', category: 'Consumer Goods' },
+  { id: 'mayora', name: 'PT Mayora Indah Tbk', src: '/images/customers/mayora.png', category: 'F&B Manufaktur' },
+  { id: 'soho', name: 'SOHO Global Health', src: '/images/customers/soho.png', category: 'Farmasi & Medis' },
+  { id: 'tmc', name: 'TMC (Tirta Medical Centre)', src: '/images/customers/tmc.png', category: 'Layanan Kesehatan' },
+  { id: 'dexa_medica', name: 'PT Dexa Medica', src: '/images/customers/dexa_medica.png', category: 'Farmasi & Medis' },
+  { id: 'sampoerna', name: 'PT HM Sampoerna Tbk', src: '/images/customers/sampoerna.png', category: 'Industri' },
   { id: 'kapal_api', name: 'Kapal Api Group', src: '/images/customers/kapal_api.png', category: 'F&B Industri' },
-  { id: 'mayora', name: 'Mayora Indah', src: '/images/customers/mayora.png', category: 'Manufaktur' },
-  { id: 'sampoerna', name: 'Sampoerna', src: '/images/customers/sampoerna.png', category: 'Industri' },
-  { id: 'lapi', name: 'PT LAPI Laboratories', src: '/images/customers/lapi.png', category: 'Farmasi & Medis' },
-  { id: 'cady', name: 'Cady Indonesia Sehat', src: '/images/customers/cady.png', category: 'Kesehatan' },
-  { id: 'tmc', name: 'TMC Tirta Medical', src: '/images/customers/tmc.png', category: 'Layanan Medis' },
-  { id: 'rsud_alihsan', name: 'RSUD Al-Ihsan Jabar', src: '/images/customers/rsud_alihsan.png', category: 'Rumah Sakit' },
-  { id: 'nestle', name: 'Nestlé Indonesia', src: '/images/customers/nestle.png', category: 'F&B Multinasional' },
-  { id: 'st_regis', name: 'The St. Regis', src: '/images/customers/st_regis.png', category: 'Komersial & Properti' },
-  { id: 'biofarma', name: 'PT Bio Farma (Persero)', src: '/images/customers/biofarma.png', category: 'BUMN Farmasi' },
-  { id: 'mangusada', name: 'RSD Mangusada', src: '/images/customers/mangusada.png', category: 'Rumah Sakit' },
-  { id: 'smt', name: 'SMT Indonesia', src: '/images/customers/smt.png', category: 'Manufaktur Elektronik' },
-  { id: 'sigma_bimed', name: 'PT. SIGMA BIMED', src: '/images/customers/sigma_bimed.png', category: 'Alat Kesehatan' },
-  { id: 'pa_innovation', name: 'PA Innovation', src: '/images/customers/pa_innovation.png', category: 'Teknologi' }
+  { id: 'ncu', name: 'PT Nugi Cahaya Utama (NCU)', src: '/images/customers/ncu.png', category: 'Kelistrikan & Industri' },
+  { id: 'santos_jaya_abadi', name: 'PT Santos Jaya Abadi', src: '/images/customers/santos_jaya_abadi.png', category: 'F&B Manufaktur' },
+  { id: 'darya_varia', name: 'PT Darya-Varia Laboratoria Tbk', src: '/images/customers/darya_varia.png', category: 'Farmasi & Medis' },
+  { id: 'marin_liza', name: 'Marin Liza Group', src: '/images/customers/marin_liza.png', category: 'Gedung & Komersial' },
+  { id: 'lapi', name: 'PT LAPI Laboratories', src: '/images/customers/lapi.png', category: 'Farmasi' },
+  { id: 'dairygold', name: 'Dairygold', src: '/images/customers/dairygold.png', category: 'Manufaktur' },
+  { id: 'nabati', name: 'PT Kaldu Sari Nabati', src: '/images/customers/nabati.png', category: 'Consumer Goods' },
+  { id: 'pupuk_kujang', name: 'PT Pupuk Kujang Cikampek', src: '/images/customers/pupuk_kujang.png', category: 'BUMN Industri' },
+  { id: 'kino', name: 'PT Kino Indonesia Tbk', src: '/images/customers/kino.png', category: 'Consumer Goods' },
+  { id: 'c3_cady', name: 'Cady Indonesia Sehat', src: '/images/customers/c3_cady.png', category: 'Kesehatan' }
 ];
 
 export default function CustomerLogos({ 
