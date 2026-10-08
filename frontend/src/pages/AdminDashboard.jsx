@@ -297,9 +297,9 @@ export default function AdminDashboard() {
         const data = await res.json();
         setFormData(prev => {
           if (fieldName === 'images') {
-            return { ...prev, images: [data.url] };
+            return { ...prev, images: [data.url], img_src: data.url };
           }
-          return { ...prev, [fieldName]: data.url };
+          return { ...prev, [fieldName]: data.url, images: [data.url] };
         });
         showToast('Gambar berhasil diupload');
       } else {
@@ -573,8 +573,8 @@ export default function AdminDashboard() {
                 <div className="table-responsive">
                   <table className="admin-table">
                     <thead>
-                      {activeTab === 'products' && <tr><th>ID</th><th>Nama Produk</th><th>Kategori</th><th>Brand</th><th>Ukuran</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
-                      {activeTab === 'components' && <tr><th>ID</th><th>Nama Komponen</th><th>Kategori</th><th>Supplier</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
+                      {activeTab === 'products' && <tr><th>ID</th><th>Gambar</th><th>Nama Produk</th><th>Kategori</th><th>Brand</th><th>Ukuran</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
+                      {activeTab === 'components' && <tr><th>ID</th><th>Gambar</th><th>Nama Komponen</th><th>Kategori</th><th>Supplier</th><th>Harga</th><th style={{textAlign: 'center'}}>Stok</th><th>Aksi</th></tr>}
                       {activeTab === 'blogs' && <tr><th>ID</th><th>Gambar</th><th>Judul Artikel</th><th>Slug (URL)</th><th>Tanggal</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
                       {activeTab === 'portfolios' && <tr><th>ID</th><th>Gambar</th><th>Judul Proyek</th><th>Klien</th><th>Tahun</th><th>Tag</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
                       {activeTab === 'messages' && <tr><th>Tanggal</th><th>Nama</th><th>Email / WA</th><th>Pesan</th><th>Status</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>}
@@ -629,6 +629,17 @@ export default function AdminDashboard() {
                           ) : (
                             <>
                               <td>{item.id}</td>
+                              <td>
+                                <img 
+                                  src={
+                                    item.img_src || 
+                                    (item.images && (Array.isArray(item.images) ? item.images[0] : (typeof item.images === 'string' && item.images.startsWith('[') ? JSON.parse(item.images)[0] : item.images))) || 
+                                    (activeTab === 'products' ? '/images/motor_front.png' : '/images/component_placeholder.png')
+                                  } 
+                                  alt={item.name} 
+                                  style={{ width: '45px', height: '45px', objectFit: 'contain', borderRadius: '6px', background: '#f8fafc', padding: '2px', border: '1px solid #e2e8f0' }} 
+                                />
+                              </td>
                               <td style={{fontWeight: 600}}>{item.name}</td>
                               <td>{item.cat || item.category}</td>
                               <td>{item.brand || item.supplier}</td>
@@ -761,6 +772,29 @@ export default function AdminDashboard() {
                       <div className="form-group">
                         <label>Stok Utama</label>
                         <input type="text" name="stock" value={formData.stock || ''} onChange={handleChange} placeholder="Ready, Kosong, atau angka (contoh: 10)" />
+                      </div>
+
+                      <div className="form-group" style={{ margin: '16px 0', padding: '16px', background: '#f8fafc', border: '1px dashed var(--border)', borderRadius: '12px' }}>
+                        <label style={{ marginBottom: '12px', fontWeight: 600 }}>Gambar Panel / Produk</label>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                          {(formData.img_src || (formData.images && (Array.isArray(formData.images) ? formData.images[0] : (typeof formData.images === 'string' && formData.images.startsWith('[') ? JSON.parse(formData.images)[0] : formData.images)))) ? (
+                            <img 
+                              src={formData.img_src || (Array.isArray(formData.images) ? formData.images[0] : (typeof formData.images === 'string' && formData.images.startsWith('[') ? JSON.parse(formData.images)[0] : formData.images))} 
+                              alt="Preview" 
+                              style={{ width: '90px', height: '90px', borderRadius: '12px', objectFit: 'contain', background: '#fff', border: '2px solid #fff', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }} 
+                            />
+                          ) : (
+                            <div style={{ width: '90px', height: '90px', borderRadius: '12px', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', fontSize: '11px', fontStyle: 'italic', textAlign: 'center', padding: '4px' }}>Belum Ada Gambar</div>
+                          )}
+                          <div style={{ flex: 1 }}>
+                            <label className="btn-edit" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', padding: '10px 18px', borderRadius: '8px', background: '#e0f2fe', color: '#0ea5e9', fontWeight: 600 }}>
+                              <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'img_src')} style={{ display: 'none' }} />
+                              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                              Pilih Gambar Produk
+                            </label>
+                            <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '8px', marginBottom: 0 }}>Format disarankan: JPG, PNG, WEBP. Maksimal ukuran file 2MB.</p>
+                          </div>
+                        </div>
                       </div>
                       
                       <div className="form-group">

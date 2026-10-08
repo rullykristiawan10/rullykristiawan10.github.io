@@ -23,6 +23,8 @@ export default function ComponentSection({ components, search, openModal, isFeat
         continue;
       }
       
+
+      
       // 2. Tag filter
       if (activeTag && activeTag !== 'Semua' && activeTag !== 'all') {
         if (item.tag !== activeTag) {
