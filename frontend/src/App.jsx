@@ -336,6 +336,11 @@ function AppContent() {
                 if (typeof modalImages === 'string') {
                   try { modalImages = JSON.parse(modalImages); } catch(e) { modalImages = null; }
                 }
+                if (!Array.isArray(modalImages) || modalImages.length === 0) {
+                  if (modalData.img_src) {
+                    modalImages = [modalData.img_src];
+                  }
+                }
                 const images = (Array.isArray(modalImages) && modalImages.length > 0) ? modalImages : (isDist ? [
                   '/images/dist_angled.png', '/images/dist_front.png', '/images/dist_inside.png', '/images/dist_side.png'
                 ] : isMotor ? [

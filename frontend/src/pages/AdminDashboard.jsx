@@ -165,6 +165,12 @@ export default function AdminDashboard() {
       if (typeof parsedItem.parts === 'string') {
         try { parsedItem.parts = JSON.parse(parsedItem.parts); } catch(e) { parsedItem.parts = []; }
       }
+      if (typeof parsedItem.images === 'string') {
+        try { parsedItem.images = JSON.parse(parsedItem.images); } catch(e) { parsedItem.images = parsedItem.img_src ? [parsedItem.img_src] : []; }
+      }
+      if (!Array.isArray(parsedItem.images)) {
+        parsedItem.images = parsedItem.img_src ? [parsedItem.img_src] : [];
+      }
       if (!parsedItem.size && parsedItem.parts) {
         parsedItem.size = extractPanelSize(parsedItem.parts);
       }
@@ -173,7 +179,7 @@ export default function AdminDashboard() {
       }
       setFormData(parsedItem);
     } else {
-      setFormData({ features: [], parts: [] });
+      setFormData({ features: [], parts: [], images: [] });
     }
     setIsModalOpen(true);
   };
@@ -278,36 +284,68 @@ export default function AdminDashboard() {
   };
 
   const handleImageUpload = async (e, fieldName = 'img_src') => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     const token = localStorage.getItem('adminToken');
-    const formDataUpload = new FormData();
-    formDataUpload.append('image', file);
+    
+    for (let file of files) {
+      const formDataUpload = new FormData();
+      formDataUpload.append('image', file);
 
-    try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formDataUpload
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setFormData(prev => {
-          if (fieldName === 'images') {
-            return { ...prev, images: [data.url], img_src: data.url };
-          }
-          return { ...prev, [fieldName]: data.url, images: [data.url] };
+      try {
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formDataUpload
         });
-        showToast('Gambar berhasil diupload');
-      } else {
-        showToast('Gagal mengupload gambar');
+        if (res.ok) {
+          const data = await res.json();
+          setFormData(prev => {
+            let currentImages = Array.isArray(prev.images) ? [...prev.images] : (typeof prev.images === 'string' && prev.images.startsWith('[') ? JSON.parse(prev.images) : (prev.img_src ? [prev.img_src] : []));
+            if (!currentImages.includes(data.url)) {
+              currentImages.push(data.url);
+            }
+            const primaryImg = prev.img_src || currentImages[0] || data.url;
+            return {
+              ...prev,
+              img_src: primaryImg,
+              images: currentImages
+            };
+          });
+          showToast('Gambar berhasil diupload');
+        } else {
+          showToast('Gagal mengupload gambar');
+        }
+      } catch (err) {
+        showToast('Terjadi kesalahan saat mengupload gambar');
       }
-    } catch (err) {
-      showToast('Terjadi kesalahan saat mengupload gambar');
     }
+  };
+
+  const handleRemoveImage = (indexToRemove) => {
+    setFormData(prev => {
+      let currentImages = Array.isArray(prev.images) ? [...prev.images] : (typeof prev.images === 'string' && prev.images.startsWith('[') ? JSON.parse(prev.images) : []);
+      const removedUrl = currentImages[indexToRemove];
+      currentImages.splice(indexToRemove, 1);
+      let newImgSrc = prev.img_src;
+      if (newImgSrc === removedUrl) {
+        newImgSrc = currentImages[0] || '';
+      }
+      return {
+        ...prev,
+        img_src: newImgSrc,
+        images: currentImages
+      };
+    });
+  };
+
+  const handleSetPrimaryImage = (url) => {
+    setFormData(prev => ({
+      ...prev,
+      img_src: url
+    }));
+    showToast('Gambar utama berhasil diatur');
   };
 
   const handlePartChange = (index, field, value) => {
@@ -774,26 +812,42 @@ export default function AdminDashboard() {
                         <input type="text" name="stock" value={formData.stock || ''} onChange={handleChange} placeholder="Ready, Kosong, atau angka (contoh: 10)" />
                       </div>
 
-                      <div className="form-group" style={{ margin: '16px 0', padding: '16px', background: '#f8fafc', border: '1px dashed var(--border)', borderRadius: '12px' }}>
-                        <label style={{ marginBottom: '12px', fontWeight: 600 }}>Gambar Panel / Produk</label>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                          {(formData.img_src || (formData.images && (Array.isArray(formData.images) ? formData.images[0] : (typeof formData.images === 'string' && formData.images.startsWith('[') ? JSON.parse(formData.images)[0] : formData.images)))) ? (
-                            <img 
-                              src={formData.img_src || (Array.isArray(formData.images) ? formData.images[0] : (typeof formData.images === 'string' && formData.images.startsWith('[') ? JSON.parse(formData.images)[0] : formData.images))} 
-                              alt="Preview" 
-                              style={{ width: '90px', height: '90px', borderRadius: '12px', objectFit: 'contain', background: '#fff', border: '2px solid #fff', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }} 
-                            />
-                          ) : (
-                            <div style={{ width: '90px', height: '90px', borderRadius: '12px', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', fontSize: '11px', fontStyle: 'italic', textAlign: 'center', padding: '4px' }}>Belum Ada Gambar</div>
-                          )}
-                          <div style={{ flex: 1 }}>
-                            <label className="btn-edit" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', padding: '10px 18px', borderRadius: '8px', background: '#e0f2fe', color: '#0ea5e9', fontWeight: 600 }}>
-                              <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'img_src')} style={{ display: 'none' }} />
-                              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                              Pilih Gambar Produk
-                            </label>
-                            <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '8px', marginBottom: 0 }}>Format disarankan: JPG, PNG, WEBP. Maksimal ukuran file 2MB.</p>
+                      <div className="form-group" style={{ margin: '16px 0', padding: '18px', background: '#f8fafc', border: '1px dashed var(--border)', borderRadius: '12px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                          <div>
+                            <label style={{ margin: 0, fontWeight: 700, fontSize: '14px', color: 'var(--primary)' }}>Galeri Foto Produk ({Array.isArray(formData.images) ? formData.images.length : 0})</label>
+                            <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--muted)' }}>Upload satu atau beberapa foto untuk ditampilkan di galeri slider detail produk.</p>
                           </div>
+                          <label className="btn-edit" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer', padding: '8px 14px', borderRadius: '8px', background: '#e0f2fe', color: '#0ea5e9', fontWeight: 600, fontSize: '13px' }}>
+                            <input type="file" accept="image/*" multiple onChange={(e) => handleImageUpload(e, 'images')} style={{ display: 'none' }} />
+                            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                            + Tambah Foto Gallery
+                          </label>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px', marginTop: '12px' }}>
+                          {(Array.isArray(formData.images) ? formData.images : []).map((imgUrl, idx) => {
+                            const isPrimary = formData.img_src === imgUrl || (idx === 0 && !formData.img_src);
+                            return (
+                              <div key={idx} style={{ position: 'relative', border: isPrimary ? '2px solid #0284c7' : '1px solid #cbd5e1', borderRadius: '10px', overflow: 'hidden', background: '#fff', boxShadow: '0 2px 6px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
+                                <img src={imgUrl} alt={`Foto ${idx + 1}`} style={{ width: '100%', height: '85px', objectFit: 'contain', background: '#fff', padding: '4px' }} />
+                                {isPrimary && (
+                                  <span style={{ position: 'absolute', top: '4px', left: '4px', background: '#0284c7', color: '#fff', fontSize: '9px', fontWeight: 700, padding: '2px 6px', borderRadius: '4px' }}>Utama</span>
+                                )}
+                                <div style={{ display: 'flex', borderTop: '1px solid #f1f5f9', background: '#fafafa' }}>
+                                  {!isPrimary && (
+                                    <button type="button" onClick={() => handleSetPrimaryImage(imgUrl)} title="Jadikan Sampul Utama" style={{ flex: 1, padding: '5px 2px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '10px', color: '#0284c7', fontWeight: 600 }}>Utamakan</button>
+                                  )}
+                                  <button type="button" onClick={() => handleRemoveImage(idx)} title="Hapus Gambar" style={{ flex: 1, padding: '5px 2px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '10px', color: '#ef4444', fontWeight: 700 }}>✕ Hapus</button>
+                                </div>
+                              </div>
+                            );
+                          })}
+                          {(!formData.images || formData.images.length === 0) && (
+                            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '20px', color: 'var(--muted)', fontSize: '12px', fontStyle: 'italic', background: '#fff', borderRadius: '8px', border: '1px dashed #cbd5e1' }}>
+                              Belum ada foto galeri. Klik <strong>"+ Tambah Foto Gallery"</strong> untuk mengunggah foto.
+                            </div>
+                          )}
                         </div>
                       </div>
                       
